@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static surfy.comfy.config.BaseResponseStatus.SUCCESS;
+import static ForCloud.backend.config.BaseResponseStatus.SUCCESS;
 
 
 @Getter
