@@ -2,6 +2,7 @@ package ForCloud.backend.service;
 
 import ForCloud.backend.data.ApplicantResponse;
 import ForCloud.backend.data.MemberTemperature;
+import ForCloud.backend.data.PostResponse;
 import ForCloud.backend.data.ProjectResponse;
 import ForCloud.backend.entity.Applicant;
 import ForCloud.backend.entity.Member;
@@ -12,14 +13,11 @@ import ForCloud.backend.repository.MemberRepository;
 import ForCloud.backend.repository.PostCategoryRepository;
 import ForCloud.backend.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,20 +28,24 @@ public class PostService {
         private final PostCategoryRepository postCategoryRepository;
         private final MemberRepository memberRepository;
 
-        public List<Post> getAllPosts(){
+        public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
-
-            return postList;
+            List<PostResponse> postResponseList = postList.stream()
+                    .map(p -> new PostResponse(p))
+                    .collect(Collectors.toList());
+            return postResponseList;
         }
 
-        public Post getPost(Long postId){
+        public PostResponse getPost(Long postId){
             Post post = postRepository.findById(postId).get();
-            return post;
+            PostResponse postResponse = new PostResponse(post);
+
+            return postResponse;
         }
 
         public List<MemberTemperature> getTemperature(){
            List<Member> allNameSortedByTemperature =
-                   memberRepository.findAll(Sort.by("temperature"));
+                   memberRepository.findAll(Sort.by("temperature").descending());
 
             List<MemberTemperature> memberTemperatureList = new ArrayList<>();
 
@@ -61,8 +63,8 @@ public class PostService {
             return memberTemperatureList;
         }
 
-        public List<ApplicantResponse> getApplicant (Long postId, Long memberId){
-            List<Applicant> applicant = applicantRepository.findAllByPostMemberId(postId, memberId);
+        public List<ApplicantResponse> getApplicant (Long postId){
+            List<Applicant> applicant = applicantRepository.findAllByPostId(postId);
 
             List<ApplicantResponse> applicantResponses = applicant.stream()
                     .map(p -> new ApplicantResponse(p))

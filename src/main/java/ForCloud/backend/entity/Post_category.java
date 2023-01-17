@@ -1,5 +1,6 @@
 package ForCloud.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class Post_category {
     @Column(name="post_category_id")
     private Long id;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name="post_id")
     private Post post;

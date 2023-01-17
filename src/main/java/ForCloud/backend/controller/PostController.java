@@ -3,11 +3,11 @@ package ForCloud.backend.controller;
 import ForCloud.backend.config.BaseResponse;
 import ForCloud.backend.data.ApplicantResponse;
 import ForCloud.backend.data.MemberTemperature;
+import ForCloud.backend.data.PostResponse;
 import ForCloud.backend.data.ProjectResponse;
 import ForCloud.backend.entity.Post;
 import ForCloud.backend.entity.Post_category;
 import ForCloud.backend.service.PostService;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,14 +22,14 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/post")
-    public BaseResponse<List<Post>> getAllPosts() {
-        List<Post> postList = postService.getAllPosts();
-        return new BaseResponse<>(postList);
+    public BaseResponse<List<PostResponse>> getAllPosts() {
+        List<PostResponse> postResponseList = postService.getAllPosts();
+        return new BaseResponse<>(postResponseList);
     }
 
     @GetMapping("/post/{postId}")
-    public BaseResponse<Post> getPost(@PathVariable(name="postId") Long postId){
-        Post post = postService.getPost(postId);
+    public BaseResponse<PostResponse> getPost(@PathVariable(name="postId") Long postId){
+        PostResponse post = postService.getPost(postId);
 
         return new BaseResponse<>(post);
     }
@@ -41,9 +41,9 @@ public class PostController {
         return new BaseResponse<>(memberTemperatureList);
     }
 
-    @GetMapping("/applicant/{postId}/{memberId}")
-    public BaseResponse<List<ApplicantResponse>> getApplicant(@PathVariable(name="postId")Long postId, @PathVariable(name="memberId")Long memberId) {
-        List<ApplicantResponse> applicantResponses = postService.getApplicant(postId, memberId);
+    @GetMapping("/applicant/{postId}")
+    public BaseResponse<List<ApplicantResponse>> getApplicant(@PathVariable(name="postId")Long postId) {
+        List<ApplicantResponse> applicantResponses = postService.getApplicant(postId);
 
         return new BaseResponse<>(applicantResponses);
     }

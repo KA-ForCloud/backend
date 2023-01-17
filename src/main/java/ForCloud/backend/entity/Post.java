@@ -21,11 +21,16 @@ public class Post {
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name="member_id")
-    private Member member; // 설문 제작자
+    private Member member;
 
     private String title;
+    private String date;
     private String period;
     private String duration;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "post")
+    private Post_category post_category;
 
     private String contents;
 
