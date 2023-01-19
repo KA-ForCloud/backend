@@ -7,12 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
-@Table(name="applicant")
-public class Applicant {
+@Getter
+@Setter
+@Table(name="participant")
+public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="applicant_id")
+    @Column(name="participant_id")
     private Long id;
 
     @ManyToOne
@@ -24,7 +25,4 @@ public class Applicant {
     @JsonBackReference
     @JoinColumn(name="post_id")
     private Post post;
-
-    //신청한 분야
-    private String request;
 }

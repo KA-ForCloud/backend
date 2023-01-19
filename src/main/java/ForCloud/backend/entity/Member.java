@@ -29,6 +29,10 @@ public class Member {
 
     @JsonManagedReference
     @OneToMany(mappedBy="member",cascade = CascadeType.ALL)
+    private List<Participant> participants;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy="member",cascade = CascadeType.ALL)
     private List<Applicant> applicants;
 
 

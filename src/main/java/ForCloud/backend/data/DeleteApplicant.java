@@ -8,15 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApplicantResponse {
-    private Long id;
+public class DeleteApplicant {
+    private Long postId;
     private String name;
 
-    private String requested;
-
-    public ApplicantResponse(Applicant applicant){
-        this.id = applicant.getId();
+    public DeleteApplicant(Applicant applicant){
+        this.postId = applicant.getPost().getId();
         this.name = applicant.getMember().getName();
-        this.requested = applicant.getRequest();
     }
 }

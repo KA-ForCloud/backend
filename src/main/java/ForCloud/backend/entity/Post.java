@@ -36,4 +36,12 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     private PostType status;
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
+    private List<Participant> participants;
+
+
+    private Long view;
 }
