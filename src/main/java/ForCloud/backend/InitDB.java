@@ -42,33 +42,32 @@ public class InitDB {
             Member member5= createMember("e@gmail.com","eee",36.9);
             em.persist(member5);
 
-            Post post1 = createPost(member1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting);
+            Post post1 = createPost(member1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
             em.persist(post1);
 
-            Post post2 = createPost(member2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting);
+            Post post2 = createPost(member2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
             em.persist(post2);
 
-            Post post3 = createPost(member3, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed);
+            Post post3 = createPost(member3, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
             em.persist(post3);
 
             Applicant applicant1 = createApplicant(member2, post1, "react");
             em.persist(applicant1);
 
-            Applicant applicant2 = createApplicant(member3, post1, "spring");
+            Applicant applicant2 = createApplicant(member3, post1, "springboot");
             em.persist(applicant2);
 
-            Applicant applicant3 = createApplicant(member4, post1, "spring");
+            Applicant applicant3 = createApplicant(member4, post1, "springboot");
             em.persist(applicant3);
 
             Post_category post_category1 = createPost_category(post1, 2,0,0,2,0,0);
             em.persist(post_category1);
 
-            Post_category post_category2 = createPost_category(post2, 3,3,0,0,0,0);
-            em.persist(post_category2);
-
-            Post_category post_category3 = createPost_category(post3, 2,0,4,2,0,0);
+            Post_category post_category3 = createPost_category(post2, 3,3,0,0,0,0);
             em.persist(post_category3);
 
+            Post_category post_category4 = createPost_category(post3, 2,0,4,2,0,0);
+            em.persist(post_category4);
         }
 
         private Member createMember(String email, String username, double temperature){
@@ -79,7 +78,7 @@ public class InitDB {
            return member;
        }
 
-       private Post createPost(Member member, String title, String date, String period, String duration, String contents, PostType type){
+       private Post createPost(Member member, String title, String date, String period, String duration, String contents, PostType type, Long view){
            Post post = new Post();
            post.setMember(member);
            post.setTitle(title);
@@ -88,6 +87,7 @@ public class InitDB {
            post.setDuration(duration);
            post.setContents(contents);
            post.setStatus(type);
+           post.setView(view);
            return post;
        }
 

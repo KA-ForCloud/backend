@@ -28,5 +28,4 @@ public class Post_category {
     private Integer springboot;
     private Integer python;
     private Integer java;
-
 }

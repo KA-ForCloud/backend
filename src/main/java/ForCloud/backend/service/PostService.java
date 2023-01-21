@@ -1,21 +1,14 @@
 package ForCloud.backend.service;
 
-import ForCloud.backend.data.ApplicantResponse;
-import ForCloud.backend.data.MemberTemperature;
-import ForCloud.backend.data.PostResponse;
-import ForCloud.backend.data.ProjectResponse;
-import ForCloud.backend.entity.Applicant;
-import ForCloud.backend.entity.Member;
-import ForCloud.backend.entity.Post;
-import ForCloud.backend.entity.Post_category;
-import ForCloud.backend.repository.ApplicantRepository;
-import ForCloud.backend.repository.MemberRepository;
-import ForCloud.backend.repository.PostCategoryRepository;
-import ForCloud.backend.repository.PostRepository;
+import ForCloud.backend.data.*;
+import ForCloud.backend.entity.*;
+import ForCloud.backend.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +20,8 @@ public class PostService {
         private final ApplicantRepository applicantRepository;
         private final PostCategoryRepository postCategoryRepository;
         private final MemberRepository memberRepository;
+
+        private final ParticipantRepository participantRepository;
 
         public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
@@ -89,5 +84,50 @@ public class PostService {
             projectResponse.setContents(post.getContents());
 
             return projectResponse;
+    }
+    @Transactional
+    public RequestApplicant registerApplicant(RequestApplicant request){
+            Applicant applicant = new Applicant();
+            Member member = memberRepository.findById(request.getMemberId()).get();
+            Post post = postRepository.findById(request.getPostId()).get();
+            applicant.setPost(post);
+            applicant.setMember(member);
+            applicant.setRequest(request.getRequest());
+            return new RequestApplicant(applicantRepository.save(applicant));
+    }
+
+    @Transactional
+    public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
+        Participant participant = new Participant();
+        Member member = memberRepository.findByName(requestParticipant.getName()).get();
+        Post post = postRepository.findById(requestParticipant.getPostId()).get();
+
+        participant.setPost(post);
+        participant.setMember(member);
+        return new RequestParticipant(participantRepository.save(participant));
+    }
+
+    @Transactional
+    public DeleteApplicant deleteApplicant (Long postId, String name){
+            Applicant applicant = applicantRepository.findByPostId_MemberName(postId, name).get();
+            applicantRepository.delete(applicant);
+
+            return new DeleteApplicant(postId, name);
+    }
+
+    @Transactional
+    public DeletePost deletePost (Long postId, Long memberId){
+        Post post = postRepository.findByPost_MemberId(postId, memberId).get();
+        postRepository.delete(post);
+
+        return new DeletePost(postId, memberId);
+    }
+
+    @Transactional
+    public Post addView(Long postId){
+            Post post = postRepository.findById(postId).get();
+            post.setView(post.getView()+1L);
+
+            return post;
     }
 }
