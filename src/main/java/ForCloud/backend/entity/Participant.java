@@ -25,4 +25,6 @@ public class Participant {
     @JsonBackReference
     @JoinColumn(name="post_id")
     private Post post;
+
+    private String category;
 }

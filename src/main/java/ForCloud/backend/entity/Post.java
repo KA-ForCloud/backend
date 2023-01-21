@@ -29,7 +29,7 @@ public class Post {
     private String duration;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "post")
+    @OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
     private Post_category post_category;
 
     private String contents;
@@ -42,6 +42,9 @@ public class Post {
     @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
     private List<Participant> participants;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
+    private List<Applicant> applicants;
 
     private Long view;
 }

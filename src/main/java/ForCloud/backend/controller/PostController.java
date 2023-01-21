@@ -9,6 +9,7 @@ import ForCloud.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -74,5 +75,18 @@ public class PostController {
     public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "memberName")String name){
         DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, name);
         return new BaseResponse<>(deleteApplicant);
+    }
+
+    @DeleteMapping("/post/{postId}/{memberId}")
+    public BaseResponse<DeletePost> deletePost(@PathVariable(name="postId") Long postId, @PathVariable(name="memberId") Long memberId){
+        DeletePost deletePost = postService.deletePost(postId, memberId);
+
+        return new BaseResponse<>(deletePost);
+    }
+
+    @PatchMapping("/post/{postId}")
+    public BaseResponse<Post> addPostView(@PathVariable(name="postId")Long postId){
+        Post post = postService.addView(postId);
+        return new BaseResponse<>(post);
     }
 }

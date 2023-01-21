@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 public class RequestParticipant {
     private Long postId;
     private String name;
-
+    private String category;
     public RequestParticipant(Participant participant){
         this.postId = participant.getPost().getId();
         this.name = participant.getMember().getName();
+        this.category = participant.getCategory();
     }
 }

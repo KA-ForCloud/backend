@@ -22,6 +22,7 @@ public class PostResponse {
     private Post_category post_category;
     private PostType postType;
 
+    private Long view;
     public PostResponse(Post post){
         this.id = post.getId();
         this.name = post.getMember().getName();
@@ -32,5 +33,6 @@ public class PostResponse {
         this.contents = post.getContents();
         this.post_category = post.getPost_category();
         this.postType = post.getStatus();
+        this.view = post.getView();
     }
 }

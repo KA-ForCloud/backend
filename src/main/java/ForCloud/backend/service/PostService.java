@@ -114,4 +114,20 @@ public class PostService {
 
             return new DeleteApplicant(postId, name);
     }
+
+    @Transactional
+    public DeletePost deletePost (Long postId, Long memberId){
+        Post post = postRepository.findByPost_MemberId(postId, memberId).get();
+        postRepository.delete(post);
+
+        return new DeletePost(postId, memberId);
+    }
+
+    @Transactional
+    public Post addView(Long postId){
+            Post post = postRepository.findById(postId).get();
+            post.setView(post.getView()+1L);
+
+            return post;
+    }
 }
