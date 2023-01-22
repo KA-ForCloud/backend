@@ -3,6 +3,8 @@ package ForCloud.backend.service;
 import ForCloud.backend.data.*;
 import ForCloud.backend.entity.*;
 import ForCloud.backend.repository.*;
+import ForCloud.backend.type.PostType;
+import ForCloud.backend.type.ProjectType;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Request;
 import org.springframework.data.domain.Sort;
@@ -31,12 +33,35 @@ public class PostService {
             return postResponseList;
         }
 
-        public PostResponse getPost(Long postId){
-            Post post = postRepository.findById(postId).get();
-            PostResponse postResponse = new PostResponse(post);
-
-            return postResponse;
+        public List<PostResponse> getMyPost(Long memberId){
+            List<Post> postList = postRepository.findAllById(memberId);
+            List<PostResponse> postResponseList = postList.stream()
+                    .map(p -> new PostResponse(p))
+                    .collect(Collectors.toList());
+            return postResponseList;
         }
+        public List<PostResponse> getMyRequestedPost(Long memberId){
+            List<Applicant> applicantList = applicantRepository.findAllByMemberId(memberId);
+            List<PostResponse> postResponseList = new ArrayList<>();
+            for(Applicant applicant : applicantList){
+                postResponseList.add(new PostResponse(applicant.getPost()));
+            }
+            return postResponseList;
+        }
+
+        public List<GetProjectListResponse> getMyProject(Long memberId){
+            List<Participant> participantList = participantRepository.findAllByMemberId(memberId);
+            List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
+            for(Participant participant : participantList){
+                GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
+                getProjectListResponse.setPostResponse(new PostResponse(participant.getPost()));
+                getProjectListResponse.setProjectType(participant.getProjectType());
+
+                getProjectListResponseList.add(getProjectListResponse);
+            }
+            return getProjectListResponseList;
+        }
+
 
         public List<MemberTemperature> getTemperature(){
            List<Member> allNameSortedByTemperature =
@@ -68,23 +93,6 @@ public class PostService {
             return applicantResponses;
         }
 
-        public List<Post_category> getPostCategory (Long postId){
-            List<Post_category> post_categoryList = postCategoryRepository.findAllById(postId);
-
-            return post_categoryList;
-        }
-
-        public ProjectResponse getProjectInfo (Long postId){
-            Post post = postRepository.findById(postId).get();
-            ProjectResponse projectResponse = new ProjectResponse();
-            projectResponse.setName(post.getMember().getName());
-            projectResponse.setTitle(post.getTitle());
-            projectResponse.setPeriod(post.getPeriod());
-            projectResponse.setDuration(post.getDuration());
-            projectResponse.setContents(post.getContents());
-
-            return projectResponse;
-    }
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
             Applicant applicant = new Applicant();
@@ -104,6 +112,7 @@ public class PostService {
 
         participant.setPost(post);
         participant.setMember(member);
+        participant.setProjectType(ProjectType.onGoing);
         return new RequestParticipant(participantRepository.save(participant));
     }
 
@@ -130,4 +139,48 @@ public class PostService {
 
             return post;
     }
+
+    @Transactional
+    public Post_category updateCurrentCategory(Long postId, String name){
+        List<Post_category> post_categoryList = postCategoryRepository.findAllByPostId(postId);
+        Member member = memberRepository.findByName(name).get();
+        List<Applicant> applicantList = applicantRepository.findAllByPostId(postId);
+        String category = "";
+        for(int i=0; i<applicantList.size(); i++){
+            if(member.getName().equals(applicantList.get(i).getMember().getName())){
+                category = applicantList.get(i).getRequest();
+                break;
+            }
+        }
+        Post_category post_category = new Post_category();
+        for(int i=0; i<post_categoryList.size(); i++){
+            if(post_categoryList.get(i).getType().equals("current")){
+                post_category = post_categoryList.get(i);
+                break;
+            }
+        }
+
+        if(category.equals("react")){
+            post_category.setReact(post_category.getReact()+1L);
+        }else if(category.equals("spring")){
+            post_category.setSpring(post_category.getSpring()+1L);
+        }else if(category.equals("java")){
+            post_category.setJava(post_category.getJava()+1L);
+        }else if(category.equals("python")){
+            post_category.setPython(post_category.getPython()+1L);
+        }else if(category.equals("springboot")){
+            post_category.setSpringboot(post_category.getSpringboot()+1L);
+        }else if(category.equals("javascript")){
+            post_category.setJavascript(post_category.getJavascript()+1L);
+        }
+        return post_category;
+    }
+    @Transactional
+    public Post updatePost(Long postId){
+        Post post = postRepository.findById(postId).get();
+        post.setStatus(PostType.completed);
+
+        return post;
+    }
+
 }
