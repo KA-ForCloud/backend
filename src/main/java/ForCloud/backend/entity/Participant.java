@@ -1,5 +1,6 @@
 package ForCloud.backend.entity;
 
+import ForCloud.backend.type.ProjectType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +28,6 @@ public class Participant {
     private Post post;
 
     private String category;
+
+    private ProjectType projectType;
 }

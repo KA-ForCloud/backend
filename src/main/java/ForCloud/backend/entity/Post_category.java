@@ -17,15 +17,17 @@ public class Post_category {
     @Column(name="post_category_id")
     private Long id;
 
+    @ManyToOne
     @JsonBackReference
-    @OneToOne
     @JoinColumn(name="post_id")
     private Post post;
 
-    private Integer react;
-    private Integer javascript;
-    private Integer spring;
-    private Integer springboot;
-    private Integer python;
-    private Integer java;
+    private String type;
+
+    private Long react;
+    private Long javascript;
+    private Long spring;
+    private Long springboot;
+    private Long python;
+    private Long java;
 }

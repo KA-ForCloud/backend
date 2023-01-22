@@ -1,10 +1,8 @@
 package ForCloud.backend;
 
-import ForCloud.backend.entity.Applicant;
-import ForCloud.backend.entity.Member;
-import ForCloud.backend.entity.Post;
-import ForCloud.backend.entity.Post_category;
+import ForCloud.backend.entity.*;
 import ForCloud.backend.type.PostType;
+import ForCloud.backend.type.ProjectType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -48,8 +46,11 @@ public class InitDB {
             Post post2 = createPost(member2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
             em.persist(post2);
 
-            Post post3 = createPost(member3, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+            Post post3 = createPost(member4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
             em.persist(post3);
+
+            Post post5 = createPost(member5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+            em.persist(post5);
 
             Applicant applicant1 = createApplicant(member2, post1, "react");
             em.persist(applicant1);
@@ -60,14 +61,39 @@ public class InitDB {
             Applicant applicant3 = createApplicant(member4, post1, "springboot");
             em.persist(applicant3);
 
-            Post_category post_category1 = createPost_category(post1, 2,0,0,2,0,0);
+            Participant participant1 = createParticipant(member1, post3, "react",ProjectType.onGoing);
+            em.persist(participant1);
+
+
+            Participant participant2 = createParticipant(member1, post5, "springboot",ProjectType.completed);
+            em.persist(participant2);
+
+            Participant participant3 = createParticipant(member2, post5, "springboot",ProjectType.completed);
+            em.persist(participant3);
+
+            Post_category post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
             em.persist(post_category1);
 
-            Post_category post_category3 = createPost_category(post2, 3,3,0,0,0,0);
+            Post_category post_category2 = createPost_category(post1, "current",0L,0L,0L,0L,0L,0L);
+            em.persist(post_category2);
+
+            Post_category post_category3 = createPost_category(post2, "recruits",3L,3L,0L,0L,0L,0L);
             em.persist(post_category3);
 
-            Post_category post_category4 = createPost_category(post3, 2,0,4,2,0,0);
+            Post_category post_category4 = createPost_category(post2, "current",0L,0L,0L,0L,0L,0L);
             em.persist(post_category4);
+
+            Post_category post_category5 = createPost_category(post3, "recruits",2L,0L,4L,2L,0L,0L);
+            em.persist(post_category5);
+
+            Post_category post_category6 = createPost_category(post3, "current",0L,0L,0L,0L,0L,0L);
+            em.persist(post_category6);
+
+            Post_category post_category7 = createPost_category(post5, "recruits",1L,0L,0L,1L,0L,0L);
+            em.persist(post_category7);
+
+            Post_category post_category8 = createPost_category(post5, "current",0L,0L,0L,0L,0L,0L);
+            em.persist(post_category8);
         }
 
         private Member createMember(String email, String username, double temperature){
@@ -99,10 +125,20 @@ public class InitDB {
             return applicant;
        }
 
-       private Post_category createPost_category(Post post, Integer react, Integer javascript, Integer spring
-       , Integer springboot, Integer python, Integer java){
+        private Participant createParticipant(Member member, Post post, String category, ProjectType projectType){
+            Participant participant = new Participant();
+            participant.setPost(post);
+            participant.setCategory(category);
+            participant.setMember(member);
+            participant.setProjectType(projectType);
+            return participant;
+        }
+
+       private Post_category createPost_category(Post post, String type, Long react, Long javascript, Long spring
+       , Long springboot, Long python, Long java){
             Post_category post_category = new Post_category();
             post_category.setPost(post);
+            post_category.setType(type);
             post_category.setReact(react);
             post_category.setJava(java);
             post_category.setPython(python);

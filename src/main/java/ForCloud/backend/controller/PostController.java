@@ -24,12 +24,27 @@ public class PostController {
         return new BaseResponse<>(postResponseList);
     }
 
-    @GetMapping("/post/{postId}")
-    public BaseResponse<PostResponse> getPost(@PathVariable(name="postId") Long postId){
-        PostResponse post = postService.getPost(postId);
+    @GetMapping("/post/{memberId}")
+    public BaseResponse<List<PostResponse>> getMyPost(@PathVariable(name="memberId") Long memberId){
+        List<PostResponse> postList = postService.getMyPost(memberId);
 
-        return new BaseResponse<>(post);
+        return new BaseResponse<>(postList);
     }
+
+    @GetMapping("/requestedPost/{memberId}")
+    public BaseResponse<List<PostResponse>> getRequestedPost(@PathVariable(name="memberId") Long memberId){
+        List<PostResponse> postList = postService.getMyRequestedPost(memberId);
+
+        return new BaseResponse<>(postList);
+    }
+
+    @GetMapping("/project/{memberId}")
+    public BaseResponse<List<GetProjectListResponse>> getProject(@PathVariable(name="memberId") Long memberId){
+        List<GetProjectListResponse> postList = postService.getMyProject(memberId);
+
+        return new BaseResponse<>(postList);
+    }
+
 
     @GetMapping("/temperature")
     public BaseResponse<List<MemberTemperature>> getTemperatureList () {
@@ -43,20 +58,6 @@ public class PostController {
         List<ApplicantResponse> applicantResponses = postService.getApplicant(postId);
 
         return new BaseResponse<>(applicantResponses);
-    }
-
-    @GetMapping("/postCategory/{postId}")
-    public BaseResponse<List<Post_category>> getPostCategory (@PathVariable(name="postId")Long postId){
-        List<Post_category> post_categoryList = postService.getPostCategory(postId);
-
-        return new BaseResponse<>(post_categoryList);
-    }
-
-    @GetMapping("/project/{postId}")
-    public BaseResponse<ProjectResponse> getProjectInfo (@PathVariable(name="postId") Long postId){
-        ProjectResponse projectResponse = postService.getProjectInfo(postId);
-
-        return new BaseResponse<>(projectResponse);
     }
 
     @PostMapping("/registerApplicant")
@@ -87,6 +88,18 @@ public class PostController {
     @PatchMapping("/post/{postId}")
     public BaseResponse<Post> addPostView(@PathVariable(name="postId")Long postId){
         Post post = postService.addView(postId);
+        return new BaseResponse<>(post);
+    }
+
+    @PatchMapping("/postCategory/{postId}/{name}")
+    public BaseResponse<Post_category> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="name")String name){
+        Post_category post_category = postService.updateCurrentCategory(postId, name);
+        return new BaseResponse<>(post_category);
+    }
+
+    @PatchMapping("/postStatus/{postId}")
+    public BaseResponse<Post> updatePostStatus(@PathVariable(name="postId")Long postId){
+        Post post = postService.updatePost(postId);
         return new BaseResponse<>(post);
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface PostCategoryRepository extends JpaRepository<Post_category, Long> {
 
-    List<Post_category> findAllById(Long postId);
+    List<Post_category> findAllByPostId(Long postId);
 }

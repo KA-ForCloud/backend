@@ -29,8 +29,8 @@ public class Post {
     private String duration;
 
     @JsonManagedReference
-    @OneToOne(mappedBy = "post",cascade = CascadeType.ALL)
-    private Post_category post_category;
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    private List<Post_category> post_category;
 
     private String contents;
 
