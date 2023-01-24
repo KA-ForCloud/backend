@@ -31,6 +31,7 @@ public class ChattingService {
 
     @Transactional
     public List<ChattingResponse> getChattingList(Long memberId){
+
         List<Participant> participatingList=participantRepository.findAllByMember_Id(memberId);
         List<ChattingResponse> chattingList=new ArrayList<>();
         for(Participant p:participatingList) {
@@ -39,9 +40,22 @@ public class ChattingService {
             List<ParticipantResponse> participantResponse=participantList.stream()
                 .map(pl->new ParticipantResponse(pl))
                 .collect(toList());
-            ChattingResponse res=new ChattingResponse(chatting,participantResponse);
+            ChattingResponse res=new ChattingResponse(chatting,participantResponse,p.getLast());
             chattingList.add(res);
         }
         return chattingList;
+    }
+
+    @Transactional
+    public String deleteRoom(Long memberId,Long roomId){
+        Chatting chatting=chattingRepository.findById(roomId).get();
+
+        List<Participant> participantList=participantRepository.findAllByChatting_Id(roomId);
+        for(Participant p:participantList){
+            participantRepository.delete(p);
+        }
+
+        chattingRepository.delete(chatting);
+        return "삭제 성공";
     }
 }

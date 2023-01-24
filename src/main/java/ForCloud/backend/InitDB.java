@@ -98,6 +98,7 @@ public class InitDB {
             participant.setChatting(chatting);
             participant.setMember(post.getMember());
             participant.setType(ParticipantType.팀장);
+            participant.setLast(0L);
             em.persist(participant);
 
             return post;
@@ -118,7 +119,7 @@ public class InitDB {
             participant.setMember(member);
             participant.setType(ParticipantType.팀원);
             participant.setChatting(chatting);
-
+            participant.setLast(0L);
             return participant;
         }
 
@@ -132,12 +133,14 @@ public class InitDB {
             p1.setChatting(chatting);
             p1.setType(ParticipantType.팀장);
             p1.setMember(sender);
+            p1.setLast(0L);
             em.persist(p1);
 
             Participant p2=new Participant();
             p2.setChatting(chatting);
             p2.setType(ParticipantType.팀원);
             p2.setMember(receiver);
+            p2.setLast(0L);
             em.persist(p2);
 
             return chatting;

@@ -1,5 +1,6 @@
 package ForCloud.backend.entity;
 
+import ForCloud.backend.type.ProjectType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,4 +21,7 @@ public class Chatting {
     private Long postId;
 
     private String filePath;
+
+    private ProjectType projectType;
+
 }

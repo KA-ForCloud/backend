@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,9 +19,16 @@ public class ChattingController {
     private final Logger logger= LoggerFactory.getLogger(ChattingController.class);
 
 
-    @GetMapping("/member/{memberId}/rooms")
+    @GetMapping("/api/member/{memberId}/rooms")
     public BaseResponse<List<ChattingResponse>> getChattingList(@PathVariable(name="memberId") Long memberId){
         List<ChattingResponse> response=chattingService.getChattingList(memberId);
+        return new BaseResponse<>(response);
+    }
+
+    @DeleteMapping("/api/member/{memberId}/rooms/{roomId}")
+    public BaseResponse<String> deleteRoom(@PathVariable(name="memberId")Long memberId,@PathVariable(name="roomId")Long roomId){
+        String response=chattingService.deleteRoom(memberId,roomId);
+
         return new BaseResponse<>(response);
     }
 

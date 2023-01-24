@@ -23,4 +23,6 @@ public class Participant {
 
     @Enumerated(EnumType.STRING)
     private ParticipantType type;
+
+    private Long last;
 }
