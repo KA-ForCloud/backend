@@ -11,9 +11,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
     List<Applicant> findAllByPostId (Long postId);
 
-    List<Applicant> findAllByMemberId (Long memberId);
+    List<Applicant> findAllByUserId (Long userId);
 
 
-    @Query("select a from Applicant a where a.post.id = ?1 and a.member.name = ?2")
-    Optional<Applicant> findByPostId_MemberName (Long postId, String name);
+    @Query("select a from Applicant a where a.post.id= ?1 and a.user.name = ?2")
+    Optional<Applicant> findByPostId_UserName (Long postId, String name);
 }

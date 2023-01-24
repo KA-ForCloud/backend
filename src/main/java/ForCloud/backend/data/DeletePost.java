@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 public class DeletePost {
 
     private Long postId;
-    private Long memberId;
+    private Long userId;
 
     public DeletePost(Post post){
-        this.memberId = post.getMember().getId();
+        this.userId = post.getUser().getId();
         this.postId = post.getId();
     }
 }

@@ -11,11 +11,11 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@Table(name="member")
-public class Member {
+@Table(name="user")
+public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="member_id")
+    @Column(name="user_id")
     private Long id;
 
     private String email;
@@ -24,14 +24,14 @@ public class Member {
     private double temperature;
 
     @JsonManagedReference
-    @OneToMany(mappedBy="member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL)
     private List<Post> posts;
 
     @JsonManagedReference
-    @OneToMany(mappedBy="member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL)
     private List<Participant> participants;
 
     @JsonManagedReference
-    @OneToMany(mappedBy="member",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="user",cascade = CascadeType.ALL)
     private List<Applicant> applicants;
 }

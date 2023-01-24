@@ -14,6 +14,6 @@ public class DeleteApplicant {
 
     public DeleteApplicant(Applicant applicant){
         this.postId = applicant.getPost().getId();
-        this.name = applicant.getMember().getName();
+        this.name = applicant.getUser().getName();
     }
 }

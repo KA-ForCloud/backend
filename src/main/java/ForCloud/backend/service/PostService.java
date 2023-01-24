@@ -6,7 +6,6 @@ import ForCloud.backend.repository.*;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Request;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ public class PostService {
         private final PostRepository postRepository;
         private final ApplicantRepository applicantRepository;
         private final PostCategoryRepository postCategoryRepository;
-        private final MemberRepository memberRepository;
+        private final UserRepository userRepository;
 
         private final ParticipantRepository participantRepository;
 
@@ -33,15 +32,15 @@ public class PostService {
             return postResponseList;
         }
 
-        public List<PostResponse> getMyPost(Long memberId){
-            List<Post> postList = postRepository.findAllById(memberId);
+        public List<PostResponse> getMyPost(Long userId){
+            List<Post> postList = postRepository.findAllById(userId);
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
                     .collect(Collectors.toList());
             return postResponseList;
         }
-        public List<PostResponse> getMyRequestedPost(Long memberId){
-            List<Applicant> applicantList = applicantRepository.findAllByMemberId(memberId);
+        public List<PostResponse> getMyRequestedPost(Long userId){
+            List<Applicant> applicantList = applicantRepository.findAllByUserId(userId);
             List<PostResponse> postResponseList = new ArrayList<>();
             for(Applicant applicant : applicantList){
                 postResponseList.add(new PostResponse(applicant.getPost()));
@@ -49,8 +48,8 @@ public class PostService {
             return postResponseList;
         }
 
-        public List<GetProjectListResponse> getMyProject(Long memberId){
-            List<Participant> participantList = participantRepository.findAllByMemberId(memberId);
+        public List<GetProjectListResponse> getMyProject(Long userId){
+            List<Participant> participantList = participantRepository.findAllByUserId(userId);
             List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
             for(Participant participant : participantList){
                 GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
@@ -64,13 +63,13 @@ public class PostService {
 
 
         public List<MemberTemperature> getTemperature(){
-           List<Member> allNameSortedByTemperature =
-                   memberRepository.findAll(Sort.by("temperature").descending());
+           List<User> allNameSortedByTemperature =
+                   userRepository.findAll(Sort.by("temperature").descending());
 
             List<MemberTemperature> memberTemperatureList = new ArrayList<>();
 
             int i=0;
-            for(Member m : allNameSortedByTemperature){
+            for(User m : allNameSortedByTemperature){
                 if(i==5) break;
                 MemberTemperature memberTemperature = new MemberTemperature();
                 memberTemperature.setName(m.getName());
@@ -96,10 +95,10 @@ public class PostService {
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
             Applicant applicant = new Applicant();
-            Member member = memberRepository.findById(request.getMemberId()).get();
+            User user = userRepository.findById(request.getUserId()).get();
             Post post = postRepository.findById(request.getPostId()).get();
             applicant.setPost(post);
-            applicant.setMember(member);
+            applicant.setUser(user);
             applicant.setRequest(request.getRequest());
             return new RequestApplicant(applicantRepository.save(applicant));
     }
@@ -107,35 +106,35 @@ public class PostService {
     @Transactional
     public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
-        Member member = memberRepository.findByName(requestParticipant.getName()).get();
+        User user = userRepository.findByName(requestParticipant.getName()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
 
         participant.setPost(post);
-        participant.setMember(member);
+        participant.setUser(user);
         participant.setProjectType(ProjectType.onGoing);
         return new RequestParticipant(participantRepository.save(participant));
     }
 
     @Transactional
     public DeleteApplicant deleteApplicant (Long postId, String name){
-            Applicant applicant = applicantRepository.findByPostId_MemberName(postId, name).get();
+            Applicant applicant = applicantRepository.findByPostId_UserName(postId, name).get();
             applicantRepository.delete(applicant);
 
             return new DeleteApplicant(postId, name);
     }
 
     @Transactional
-    public DeletePost deletePost (Long postId, Long memberId){
-        Post post = postRepository.findByPost_MemberId(postId, memberId).get();
+    public DeletePost deletePost (Long postId, Long userId){
+        Post post = postRepository.findByPost_UserId(postId, userId).get();
         postRepository.delete(post);
 
-        return new DeletePost(postId, memberId);
+        return new DeletePost(postId, userId);
     }
 
     @Transactional
     public Post addView(Long postId){
             Post post = postRepository.findById(postId).get();
-            post.setView(post.getView()+1L);
+            post.setViews(post.getViews()+1L);
 
             return post;
     }
@@ -143,11 +142,11 @@ public class PostService {
     @Transactional
     public Post_category updateCurrentCategory(Long postId, String name){
         List<Post_category> post_categoryList = postCategoryRepository.findAllByPostId(postId);
-        Member member = memberRepository.findByName(name).get();
+        User user = userRepository.findByName(name).get();
         List<Applicant> applicantList = applicantRepository.findAllByPostId(postId);
         String category = "";
         for(int i=0; i<applicantList.size(); i++){
-            if(member.getName().equals(applicantList.get(i).getMember().getName())){
+            if(user.getName().equals(applicantList.get(i).getUser().getName())){
                 category = applicantList.get(i).getRequest();
                 break;
             }
@@ -178,7 +177,7 @@ public class PostService {
     @Transactional
     public Post updatePost(Long postId){
         Post post = postRepository.findById(postId).get();
-        post.setStatus(PostType.completed);
+        post.setPostType(PostType.completed);
 
         return post;
     }

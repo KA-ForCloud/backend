@@ -20,12 +20,12 @@ public class Post {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name="member_id")
-    private Member member;
+    @JoinColumn(name="user_Id")
+    private User user;
 
-    private String title;
-    private String date;
-    private String period;
+    private String post_name;
+    private String start_time;
+    private String end_time;
     private String duration;
 
     @JsonManagedReference
@@ -34,9 +34,10 @@ public class Post {
 
     private String contents;
 
-    @Enumerated(EnumType.STRING)
-    private PostType status;
+    private Integer status;
 
+    @Enumerated(EnumType.STRING)
+    private PostType postType;
 
     @JsonManagedReference
     @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
@@ -46,5 +47,5 @@ public class Post {
     @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
     private List<Applicant> applicants;
 
-    private Long view;
+    private Long views;
 }

@@ -16,7 +16,7 @@ public class RequestParticipant {
     private ProjectType projectType;
     public RequestParticipant(Participant participant){
         this.postId = participant.getPost().getId();
-        this.name = participant.getMember().getName();
+        this.name = participant.getUser().getName();
         this.category = participant.getCategory();
         this.projectType = participant.getProjectType();
     }

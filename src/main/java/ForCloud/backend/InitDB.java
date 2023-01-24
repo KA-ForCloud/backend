@@ -25,50 +25,50 @@ public class InitDB {
         private final EntityManager em;
 
         public void dbInit1(){
-            Member member1= createMember("a@gmail.com","aaa",36.5);
-            em.persist(member1);
+            User user1 = createMember("a@gmail.com","aaa",36.5);
+            em.persist(user1);
 
-            Member member2= createMember("b@gmail.com","bbb",36.7);
-            em.persist(member2);
+            User user2 = createMember("b@gmail.com","bbb",36.7);
+            em.persist(user2);
 
-            Member member3= createMember("c@gmail.com","ccc",36.8);
-            em.persist(member3);
+            User user3 = createMember("c@gmail.com","ccc",36.8);
+            em.persist(user3);
 
-            Member member4= createMember("d@gmail.com","ddd",36.4);
-            em.persist(member4);
+            User user4 = createMember("d@gmail.com","ddd",36.4);
+            em.persist(user4);
 
-            Member member5= createMember("e@gmail.com","eee",36.9);
-            em.persist(member5);
+            User user5 = createMember("e@gmail.com","eee",36.9);
+            em.persist(user5);
 
-            Post post1 = createPost(member1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
+            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
             em.persist(post1);
 
-            Post post2 = createPost(member2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
+            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
             em.persist(post2);
 
-            Post post3 = createPost(member4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
             em.persist(post3);
 
-            Post post5 = createPost(member5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
             em.persist(post5);
 
-            Applicant applicant1 = createApplicant(member2, post1, "react");
+            Applicant applicant1 = createApplicant(user2, post1, "react");
             em.persist(applicant1);
 
-            Applicant applicant2 = createApplicant(member3, post1, "springboot");
+            Applicant applicant2 = createApplicant(user3, post1, "springboot");
             em.persist(applicant2);
 
-            Applicant applicant3 = createApplicant(member4, post1, "springboot");
+            Applicant applicant3 = createApplicant(user4, post1, "springboot");
             em.persist(applicant3);
 
-            Participant participant1 = createParticipant(member1, post3, "react",ProjectType.onGoing);
+            Participant participant1 = createParticipant(user1, post3, "react",ProjectType.onGoing);
             em.persist(participant1);
 
 
-            Participant participant2 = createParticipant(member1, post5, "springboot",ProjectType.completed);
+            Participant participant2 = createParticipant(user1, post5, "springboot",ProjectType.completed);
             em.persist(participant2);
 
-            Participant participant3 = createParticipant(member2, post5, "springboot",ProjectType.completed);
+            Participant participant3 = createParticipant(user2, post5, "springboot",ProjectType.completed);
             em.persist(participant3);
 
             Post_category post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
@@ -96,40 +96,40 @@ public class InitDB {
             em.persist(post_category8);
         }
 
-        private Member createMember(String email, String username, double temperature){
-           Member member=new Member();
-           member.setEmail(email);
-           member.setName(username);
-           member.setTemperature(temperature);
-           return member;
+        private User createMember(String email, String username, double temperature){
+           User user =new User();
+           user.setEmail(email);
+           user.setName(username);
+           user.setTemperature(temperature);
+           return user;
        }
 
-       private Post createPost(Member member, String title, String date, String period, String duration, String contents, PostType type, Long view){
+       private Post createPost(User user, String title, String date, String period, String duration, String contents, PostType type, Long view){
            Post post = new Post();
-           post.setMember(member);
-           post.setTitle(title);
-           post.setDate(date);
-           post.setPeriod(period);
+           post.setUser(user);
+           post.setPost_name(title);
+           post.setStart_time(date);
+           post.setEnd_time(period);
            post.setDuration(duration);
            post.setContents(contents);
-           post.setStatus(type);
-           post.setView(view);
+           post.setPostType(type);
+           post.setViews(view);
            return post;
        }
 
-       private Applicant createApplicant(Member member, Post post, String requested){
+       private Applicant createApplicant(User user, Post post, String requested){
             Applicant applicant = new Applicant();
             applicant.setRequest(requested);
             applicant.setPost(post);
-            applicant.setMember(member);
+            applicant.setUser(user);
             return applicant;
        }
 
-        private Participant createParticipant(Member member, Post post, String category, ProjectType projectType){
+        private Participant createParticipant(User user, Post post, String category, ProjectType projectType){
             Participant participant = new Participant();
             participant.setPost(post);
             participant.setCategory(category);
-            participant.setMember(member);
+            participant.setUser(user);
             participant.setProjectType(projectType);
             return participant;
         }
