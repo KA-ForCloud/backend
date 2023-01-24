@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestApplicant {
     private Long postId;
-    private Long memberId;
+    private Long userId;
     private String request;
 
     public RequestApplicant(Applicant applicant){
-        this.memberId = applicant.getMember().getId();
+        this.userId = applicant.getUser().getId();
         this.postId = applicant.getPost().getId();
         this.request = applicant.getRequest();
     }

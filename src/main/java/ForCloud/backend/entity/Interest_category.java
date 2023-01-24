@@ -15,14 +15,13 @@ public class Interest_category {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="member_id")
-    private Member member;
+    @JoinColumn(name="user_Id")
+    private User user;
 
-    private Integer react;
-    private Integer vue;
-    private Integer spring;
-    private Integer spring_boot;
-    private Integer ML;
-    private Integer swift;
-    private Integer Kotlin;
+    private Long react;
+    private Long javascript;
+    private Long spring;
+    private Long springboot;
+    private Long python;
+    private Long java;
 }

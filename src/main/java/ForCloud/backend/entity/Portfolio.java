@@ -15,8 +15,8 @@ public class Portfolio {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name="member_id")
-    private Member member;
+    @JoinColumn(name="user_Id")
+    private User user;
 
     private String title;
     private String contents;

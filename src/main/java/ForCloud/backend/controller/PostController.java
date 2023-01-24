@@ -24,23 +24,23 @@ public class PostController {
         return new BaseResponse<>(postResponseList);
     }
 
-    @GetMapping("/post/{memberId}")
-    public BaseResponse<List<PostResponse>> getMyPost(@PathVariable(name="memberId") Long memberId){
-        List<PostResponse> postList = postService.getMyPost(memberId);
+    @GetMapping("/post/{userId}")
+    public BaseResponse<List<PostResponse>> getMyPost(@PathVariable(name="userId") Long userId){
+        List<PostResponse> postList = postService.getMyPost(userId);
 
         return new BaseResponse<>(postList);
     }
 
-    @GetMapping("/requestedPost/{memberId}")
-    public BaseResponse<List<PostResponse>> getRequestedPost(@PathVariable(name="memberId") Long memberId){
-        List<PostResponse> postList = postService.getMyRequestedPost(memberId);
+    @GetMapping("/requestedPost/{userId}")
+    public BaseResponse<List<PostResponse>> getRequestedPost(@PathVariable(name="userId") Long userId){
+        List<PostResponse> postList = postService.getMyRequestedPost(userId);
 
         return new BaseResponse<>(postList);
     }
 
-    @GetMapping("/project/{memberId}")
-    public BaseResponse<List<GetProjectListResponse>> getProject(@PathVariable(name="memberId") Long memberId){
-        List<GetProjectListResponse> postList = postService.getMyProject(memberId);
+    @GetMapping("/project/{userId}")
+    public BaseResponse<List<GetProjectListResponse>> getProject(@PathVariable(name="userId") Long userId){
+        List<GetProjectListResponse> postList = postService.getMyProject(userId);
 
         return new BaseResponse<>(postList);
     }
@@ -72,15 +72,15 @@ public class PostController {
         return new BaseResponse<>(returnParticipant);
     }
 
-    @DeleteMapping("/applicant/{postId}/{memberName}")
-    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "memberName")String name){
+    @DeleteMapping("/applicant/{postId}/{userName}")
+    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "userName")String name){
         DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, name);
         return new BaseResponse<>(deleteApplicant);
     }
 
-    @DeleteMapping("/post/{postId}/{memberId}")
-    public BaseResponse<DeletePost> deletePost(@PathVariable(name="postId") Long postId, @PathVariable(name="memberId") Long memberId){
-        DeletePost deletePost = postService.deletePost(postId, memberId);
+    @DeleteMapping("/post/{postId}/{userId}")
+    public BaseResponse<DeletePost> deletePost(@PathVariable(name="postId") Long postId, @PathVariable(name="userId") Long userId){
+        DeletePost deletePost = postService.deletePost(postId, userId);
 
         return new BaseResponse<>(deletePost);
     }

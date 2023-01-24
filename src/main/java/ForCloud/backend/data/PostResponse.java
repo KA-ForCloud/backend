@@ -16,25 +16,25 @@ public class PostResponse {
 
     private Long id;
     private String name;
-    private String title;
-    private String date;
-    private String period;
+    private String post_name;
+    private String start_time;
+    private String end_time;
     private String duration;
     private String contents;
     private List<Post_category> post_category;
     private PostType postType;
 
-    private Long view;
+    private Long views;
     public PostResponse(Post post){
         this.id = post.getId();
-        this.name = post.getMember().getName();
-        this.title = post.getTitle();
-        this.date =post.getDate();
-        this.period = post.getPeriod();
+        this.name = post.getUser().getName();
+        this.post_name = post.getPost_name();
+        this.start_time =post.getStart_time();
+        this.end_time = post.getEnd_time();
         this.duration = post.getDuration();
         this.contents = post.getContents();
         this.post_category = post.getPost_category();
-        this.postType = post.getStatus();
-        this.view = post.getView();
+        this.postType = post.getPostType();
+        this.views = post.getViews();
     }
 }

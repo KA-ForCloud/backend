@@ -17,8 +17,9 @@ import java.util.List;
 public class ProjectResponse {
 
     private String name;
-    private String title;
-    private String period;
+    private String post_name;
+
+    private String end_time;
     private String duration;
     private String contents;
 
