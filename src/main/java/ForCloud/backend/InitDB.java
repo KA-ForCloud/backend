@@ -25,19 +25,19 @@ public class InitDB {
         private final EntityManager em;
 
         public void dbInit1(){
-            User user1 = createMember("a@gmail.com","aaa",36.5);
+            User user1 = createMember("a@gmail.com","정호진",36.6);
             em.persist(user1);
 
-            User user2 = createMember("b@gmail.com","bbb",36.7);
+            User user2 = createMember("b@gmail.com","이상협",36.5);
             em.persist(user2);
 
-            User user3 = createMember("c@gmail.com","ccc",36.8);
+            User user3 = createMember("c@gmail.com","이민서",36.8);
             em.persist(user3);
 
-            User user4 = createMember("d@gmail.com","ddd",36.4);
+            User user4 = createMember("d@gmail.com","박찬빈",36.3);
             em.persist(user4);
 
-            User user5 = createMember("e@gmail.com","eee",36.9);
+            User user5 = createMember("e@gmail.com","김정규",36.4);
             em.persist(user5);
 
             Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
