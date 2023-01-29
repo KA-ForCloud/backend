@@ -2,22 +2,26 @@ package ForCloud.backend.controller;
 
 import ForCloud.backend.config.BaseResponse;
 import ForCloud.backend.data.*;
-import ForCloud.backend.entity.Applicant;
+import ForCloud.backend.dto.PostDto;
 import ForCloud.backend.entity.Post;
-import ForCloud.backend.entity.Post_category;
+import ForCloud.backend.entity.PostCategory;
+import ForCloud.backend.service.DtoService;
 import ForCloud.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.Path;
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@ResponseBody
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
-
+    @Autowired
+    DtoService dtoService;
     @GetMapping("/post")
     public BaseResponse<List<PostResponse>> getAllPosts() {
         List<PostResponse> postResponseList = postService.getAllPosts();
@@ -92,8 +96,8 @@ public class PostController {
     }
 
     @PatchMapping("/postCategory/{postId}/{name}")
-    public BaseResponse<Post_category> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="name")String name){
-        Post_category post_category = postService.updateCurrentCategory(postId, name);
+    public BaseResponse<PostCategory> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="name")String name){
+        PostCategory post_category = postService.updateCurrentCategory(postId, name);
         return new BaseResponse<>(post_category);
     }
 
@@ -101,5 +105,12 @@ public class PostController {
     public BaseResponse<Post> updatePostStatus(@PathVariable(name="postId")Long postId){
         Post post = postService.updatePost(postId);
         return new BaseResponse<>(post);
+    }
+
+    @PostMapping("/post/save/{user_id}")
+    public void savePost(@PathVariable Long user_id, @RequestBody PostDto postDto){
+        System.out.println(user_id);
+        System.out.println(postDto);
+        dtoService.savePost(postDto, user_id);
     }
 }

@@ -1,7 +1,7 @@
 package ForCloud.backend.data;
 
 import ForCloud.backend.entity.Post;
-import ForCloud.backend.entity.Post_category;
+import ForCloud.backend.entity.PostCategory;
 import ForCloud.backend.type.PostType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,13 +21,13 @@ public class PostResponse {
     private String end_time;
     private String duration;
     private String contents;
-    private List<Post_category> post_category;
+    private List<PostCategory> post_category;
     private PostType postType;
 
-    private Long views;
+    private Integer views;
     public PostResponse(Post post){
-        this.id = post.getId();
-        this.name = post.getUser().getName();
+        this.id = post.getUser().getId();
+        this.name = post.getUser().getUser_name();
         this.post_name = post.getPost_name();
         this.start_time =post.getStart_time();
         this.end_time = post.getEnd_time();

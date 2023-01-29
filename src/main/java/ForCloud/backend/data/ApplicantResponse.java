@@ -16,7 +16,7 @@ public class ApplicantResponse {
 
     public ApplicantResponse(Applicant applicant){
         this.id = applicant.getId();
-        this.name = applicant.getUser().getName();
+        this.name = applicant.getUser().getUser_name();
         this.requested = applicant.getRequest();
     }
 }

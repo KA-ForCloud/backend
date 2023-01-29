@@ -1,12 +1,13 @@
 package ForCloud.backend.repository;
 
-import ForCloud.backend.entity.Post_category;
+import ForCloud.backend.entity.PostCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface PostCategoryRepository extends JpaRepository<Post_category, Long> {
+@Repository
+public interface PostCategoryRepository extends JpaRepository<PostCategory, Long> {
 
-    List<Post_category> findAllByPostId(Long postId);
+    List<PostCategory> findAllByPostId(Long postId);
 }

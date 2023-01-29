@@ -17,7 +17,7 @@ public class Applicant {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name="user_Id")
+    @JoinColumn(name="user_id")
     private User user;
 
     @ManyToOne
