@@ -25,12 +25,12 @@ public class PostCategory {
 
     private String type;
 
-    private Integer react;
-    private Integer javascript;
-    private Integer spring;
-    private Integer springboot;
-    private Integer python;
-    private Integer java;
+    private Long react;
+    private Long javascript;
+    private Long spring;
+    private Long springboot;
+    private Long python;
+    private Long java;
 
     public void setByDto(PostCategoryDto postCategoryDto, Post post){
         this.spring = postCategoryDto.getSpring();

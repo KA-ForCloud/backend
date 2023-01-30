@@ -54,7 +54,7 @@ public class Post {
     @OneToMany(mappedBy="post",cascade = CascadeType.ALL)
     private List<Applicant> applicants;
 
-    private Integer views;
+    private Long views;
 
     public void setByDto(PostDto postDto){
         this.post_name = postDto.getPost_name();

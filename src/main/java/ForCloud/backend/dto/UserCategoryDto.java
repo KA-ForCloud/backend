@@ -9,17 +9,17 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class UserCategoryDto {
-    private Integer spring;
+    private Long spring;
 
-    private Integer react;
+    private Long react;
 
-    private Integer python;
+    private Long python;
 
-    private Integer java;
+    private Long java;
 
-    private Integer javascript;
+    private Long javascript;
 
-    private Integer springboot;
+    private Long springboot;
 
     private Long user_id;
 

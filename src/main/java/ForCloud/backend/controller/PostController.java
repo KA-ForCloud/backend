@@ -64,6 +64,12 @@ public class PostController {
         return new BaseResponse<>(applicantResponses);
     }
 
+    @GetMapping("/currentParticipant/{postId}")
+    public BaseResponse<PostCategoryResponse> getCurrentCategory (@PathVariable(name="postId")Long postId){
+        PostCategoryResponse postCategoryResponse = postService.getCurrentCategory(postId);
+        return new BaseResponse<>(postCategoryResponse);
+    }
+
     @PostMapping("/registerApplicant")
     public BaseResponse<RequestApplicant> createApplicant(@RequestBody RequestApplicant requestApplicant){
         RequestApplicant returnApplicantPost = postService.registerApplicant(requestApplicant);

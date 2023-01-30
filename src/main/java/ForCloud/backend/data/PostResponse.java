@@ -24,7 +24,7 @@ public class PostResponse {
     private List<PostCategory> post_category;
     private PostType postType;
 
-    private Integer views;
+    private Long views;
     public PostResponse(Post post){
         this.id = post.getUser().getId();
         this.name = post.getUser().getUser_name();

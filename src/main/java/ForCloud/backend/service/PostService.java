@@ -5,8 +5,6 @@ import ForCloud.backend.entity.*;
 import ForCloud.backend.repository.*;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -51,6 +49,7 @@ public class PostService {
                     .collect(Collectors.toList());
             return postResponseList;
         }
+
         public List<PostResponse> getMyRequestedPost(Long userId){
             List<Applicant> applicantList = applicantRepository.findAllByUser_id(userId);
             List<PostResponse> postResponseList = new ArrayList<>();
@@ -105,6 +104,12 @@ public class PostService {
             return applicantResponses;
         }
 
+        public PostCategoryResponse getCurrentCategory (Long postId){
+            PostCategory postCategory = postCategoryRepository.findById(postId, "current").get();
+            PostCategoryResponse postCategoryResponse = new PostCategoryResponse(postCategory);
+            return postCategoryResponse;
+        }
+
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
             Applicant applicant = new Applicant();
@@ -138,7 +143,6 @@ public class PostService {
 
     @Transactional
     public DeletePost deletePost (Long postId, Long userId){
-            User user = userRepository.findById(userId).get();
         Post post = postRepository.findByIdAndUser_Id(postId, userId).get();
         postRepository.delete(post);
 

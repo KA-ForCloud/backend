@@ -21,22 +21,22 @@ public class UserCategory {
     private Long category_id;
 
     @Column(name = "spring")
-    private Integer spring;
+    private Long spring;
 
     @Column(name = "react")
-    private Integer react;
+    private Long react;
 
     @Column(name = "python")
-    private Integer python;
+    private Long python;
 
     @Column(name = "java")
-    private Integer java;
+    private Long java;
 
     @Column(name = "javascript")
-    private Integer javascript;
+    private Long javascript;
 
     @Column(name = "springboot")
-    private Integer springboot;
+    private Long springboot;
 
     @JsonIgnore
     @JoinColumn(name = "user_id")

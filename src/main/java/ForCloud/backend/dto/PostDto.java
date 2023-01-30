@@ -15,7 +15,7 @@ public class PostDto {
     private String end_time;
     private String post_name;
     private String contents;
-    private Integer views;
+    private Long views;
 
     private PostCategoryDto postCategoryDto;
 

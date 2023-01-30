@@ -50,7 +50,7 @@ public class User {
     @Column(name = "user_image")
     private String user_image;
 
-    private Float temperature;
+    private double temperature;
 
     public User(String user_name, String user_email, String gender, String age, String token, String school, String tech, String image, String port_name, String portsave_name){
         this.user_name = user_name;
