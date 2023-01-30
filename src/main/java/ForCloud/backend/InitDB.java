@@ -25,19 +25,19 @@ public class InitDB {
         private final EntityManager em;
 
         public void dbInit1(){
-            User user1 = createMember("a@gmail.com","정호진",36.6);
+            User user1 = createMember("a@gmail.com","aaa",36.5);
             em.persist(user1);
 
-            User user2 = createMember("b@gmail.com","이상협",36.5);
+            User user2 = createMember("b@gmail.com","bbb",36.7);
             em.persist(user2);
 
-            User user3 = createMember("c@gmail.com","이민서",36.8);
+            User user3 = createMember("c@gmail.com","ccc",36.8);
             em.persist(user3);
 
-            User user4 = createMember("d@gmail.com","박찬빈",36.3);
+            User user4 = createMember("d@gmail.com","ddd",36.4);
             em.persist(user4);
 
-            User user5 = createMember("e@gmail.com","김정규",36.4);
+            User user5 = createMember("e@gmail.com","eee",36.9);
             em.persist(user5);
 
             Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
@@ -71,35 +71,35 @@ public class InitDB {
             Participant participant3 = createParticipant(user2, post5, "springboot",ProjectType.completed);
             em.persist(participant3);
 
-            Post_category post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
+            PostCategory post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
             em.persist(post_category1);
 
-            Post_category post_category2 = createPost_category(post1, "current",0L,0L,0L,0L,0L,0L);
+            PostCategory post_category2 = createPost_category(post1, "current",0L,0L,0L,0L,0L,0L);
             em.persist(post_category2);
 
-            Post_category post_category3 = createPost_category(post2, "recruits",3L,3L,0L,0L,0L,0L);
+            PostCategory post_category3 = createPost_category(post2, "recruits",3L,3L,0L,0L,0L,0L);
             em.persist(post_category3);
 
-            Post_category post_category4 = createPost_category(post2, "current",0L,0L,0L,0L,0L,0L);
+            PostCategory post_category4 = createPost_category(post2, "current",0L,0L,0L,0L,0L,0L);
             em.persist(post_category4);
 
-            Post_category post_category5 = createPost_category(post3, "recruits",2L,0L,4L,2L,0L,0L);
+            PostCategory post_category5 = createPost_category(post3, "recruits",2L,0L,4L,2L,0L,0L);
             em.persist(post_category5);
 
-            Post_category post_category6 = createPost_category(post3, "current",0L,0L,0L,0L,0L,0L);
+            PostCategory post_category6 = createPost_category(post3, "current",0L,0L,0L,0L,0L,0L);
             em.persist(post_category6);
 
-            Post_category post_category7 = createPost_category(post5, "recruits",1L,0L,0L,1L,0L,0L);
+            PostCategory post_category7 = createPost_category(post5, "recruits",1L,0L,0L,1L,0L,0L);
             em.persist(post_category7);
 
-            Post_category post_category8 = createPost_category(post5, "current",0L,0L,0L,0L,0L,0L);
+            PostCategory post_category8 = createPost_category(post5, "current",0L,0L,0L,0L,0L,0L);
             em.persist(post_category8);
         }
 
         private User createMember(String email, String username, double temperature){
            User user =new User();
-           user.setEmail(email);
-           user.setName(username);
+           user.setUser_email(email);
+           user.setUser_name(username);
            user.setTemperature(temperature);
            return user;
        }
@@ -134,9 +134,9 @@ public class InitDB {
             return participant;
         }
 
-       private Post_category createPost_category(Post post, String type, Long react, Long javascript, Long spring
+       private PostCategory createPost_category(Post post, String type, Long react, Long javascript, Long spring
        , Long springboot, Long python, Long java){
-            Post_category post_category = new Post_category();
+            PostCategory post_category = new PostCategory();
             post_category.setPost(post);
             post_category.setType(type);
             post_category.setReact(react);

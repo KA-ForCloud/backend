@@ -1,7 +1,5 @@
 package ForCloud.backend.data;
 
-import ForCloud.backend.entity.Post_category;
-import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;

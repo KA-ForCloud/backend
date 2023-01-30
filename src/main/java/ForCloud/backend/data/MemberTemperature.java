@@ -13,7 +13,7 @@ public class MemberTemperature {
     private double temperature;
 
     public MemberTemperature(User user){
-        this.name = user.getName();
+        this.name = user.getUser_name();
         this.temperature = user.getTemperature();
     }
 }

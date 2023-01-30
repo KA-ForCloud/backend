@@ -5,7 +5,7 @@ import ForCloud.backend.entity.*;
 import ForCloud.backend.repository.*;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class PostService {
+
+        @Autowired
+        public PostService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository,ParticipantRepository participantRepository) {
+
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        this.postCategoryRepository = postCategoryRepository;
+        this.applicantRepository = applicantRepository;
+        this.participantRepository = participantRepository;
+    }
         private final PostRepository postRepository;
         private final ApplicantRepository applicantRepository;
         private final PostCategoryRepository postCategoryRepository;
@@ -33,14 +42,16 @@ public class PostService {
         }
 
         public List<PostResponse> getMyPost(Long userId){
-            List<Post> postList = postRepository.findAllById(userId);
+            User user = userRepository.findById(userId).get();
+            List<Post> postList = postRepository.findAllByUser_Id(userId);
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
                     .collect(Collectors.toList());
             return postResponseList;
         }
+
         public List<PostResponse> getMyRequestedPost(Long userId){
-            List<Applicant> applicantList = applicantRepository.findAllByUserId(userId);
+            List<Applicant> applicantList = applicantRepository.findAllByUser_id(userId);
             List<PostResponse> postResponseList = new ArrayList<>();
             for(Applicant applicant : applicantList){
                 postResponseList.add(new PostResponse(applicant.getPost()));
@@ -49,7 +60,8 @@ public class PostService {
         }
 
         public List<GetProjectListResponse> getMyProject(Long userId){
-            List<Participant> participantList = participantRepository.findAllByUserId(userId);
+            User user = userRepository.findById(userId).get();
+            List<Participant> participantList = participantRepository.findByPost_Participants_User(user);
             List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
             for(Participant participant : participantList){
                 GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
@@ -72,7 +84,7 @@ public class PostService {
             for(User m : allNameSortedByTemperature){
                 if(i==5) break;
                 MemberTemperature memberTemperature = new MemberTemperature();
-                memberTemperature.setName(m.getName());
+                memberTemperature.setName(m.getUser_name());
                 memberTemperature.setTemperature(m.getTemperature());
 
                 memberTemperatureList.add(memberTemperature);
@@ -83,13 +95,19 @@ public class PostService {
         }
 
         public List<ApplicantResponse> getApplicant (Long postId){
-            List<Applicant> applicant = applicantRepository.findAllByPostId(postId);
+            List<Applicant> applicant = applicantRepository.findAllByPost_id(postId);
 
             List<ApplicantResponse> applicantResponses = applicant.stream()
                     .map(p -> new ApplicantResponse(p))
                     .collect(Collectors.toList());
 
             return applicantResponses;
+        }
+
+        public PostCategoryResponse getCurrentCategory (Long postId){
+            PostCategory postCategory = postCategoryRepository.findById(postId, "current").get();
+            PostCategoryResponse postCategoryResponse = new PostCategoryResponse(postCategory);
+            return postCategoryResponse;
         }
 
     @Transactional
@@ -106,7 +124,7 @@ public class PostService {
     @Transactional
     public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
-        User user = userRepository.findByName(requestParticipant.getName()).get();
+        User user = userRepository.findByUser_name(requestParticipant.getName()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
 
         participant.setPost(post);
@@ -117,7 +135,7 @@ public class PostService {
 
     @Transactional
     public DeleteApplicant deleteApplicant (Long postId, String name){
-            Applicant applicant = applicantRepository.findByPostId_UserName(postId, name).get();
+            Applicant applicant = applicantRepository.findByPost_id_UserName(postId, name).get();
             applicantRepository.delete(applicant);
 
             return new DeleteApplicant(postId, name);
@@ -125,7 +143,7 @@ public class PostService {
 
     @Transactional
     public DeletePost deletePost (Long postId, Long userId){
-        Post post = postRepository.findByPost_UserId(postId, userId).get();
+        Post post = postRepository.findByIdAndUser_Id(postId, userId).get();
         postRepository.delete(post);
 
         return new DeletePost(postId, userId);
@@ -134,24 +152,24 @@ public class PostService {
     @Transactional
     public Post addView(Long postId){
             Post post = postRepository.findById(postId).get();
-            post.setViews(post.getViews()+1L);
+            post.setViews(post.getViews()+1);
 
             return post;
     }
 
     @Transactional
-    public Post_category updateCurrentCategory(Long postId, String name){
-        List<Post_category> post_categoryList = postCategoryRepository.findAllByPostId(postId);
-        User user = userRepository.findByName(name).get();
-        List<Applicant> applicantList = applicantRepository.findAllByPostId(postId);
+    public PostCategory updateCurrentCategory(Long postId, String name){
+        List<PostCategory> post_categoryList = postCategoryRepository.findAllByPostId(postId);
+        User user = userRepository.findByUser_name(name).get();
+        List<Applicant> applicantList = applicantRepository.findAllByPost_id(postId);
         String category = "";
         for(int i=0; i<applicantList.size(); i++){
-            if(user.getName().equals(applicantList.get(i).getUser().getName())){
+            if(user.getUser_name().equals(applicantList.get(i).getUser().getUser_name())){
                 category = applicantList.get(i).getRequest();
                 break;
             }
         }
-        Post_category post_category = new Post_category();
+        PostCategory post_category = new PostCategory();
         for(int i=0; i<post_categoryList.size(); i++){
             if(post_categoryList.get(i).getType().equals("current")){
                 post_category = post_categoryList.get(i);
@@ -160,17 +178,17 @@ public class PostService {
         }
 
         if(category.equals("react")){
-            post_category.setReact(post_category.getReact()+1L);
+            post_category.setReact(post_category.getReact()+1);
         }else if(category.equals("spring")){
-            post_category.setSpring(post_category.getSpring()+1L);
+            post_category.setSpring(post_category.getSpring()+1);
         }else if(category.equals("java")){
-            post_category.setJava(post_category.getJava()+1L);
+            post_category.setJava(post_category.getJava()+1);
         }else if(category.equals("python")){
-            post_category.setPython(post_category.getPython()+1L);
+            post_category.setPython(post_category.getPython()+1);
         }else if(category.equals("springboot")){
-            post_category.setSpringboot(post_category.getSpringboot()+1L);
+            post_category.setSpringboot(post_category.getSpringboot()+1);
         }else if(category.equals("javascript")){
-            post_category.setJavascript(post_category.getJavascript()+1L);
+            post_category.setJavascript(post_category.getJavascript()+1);
         }
         return post_category;
     }
