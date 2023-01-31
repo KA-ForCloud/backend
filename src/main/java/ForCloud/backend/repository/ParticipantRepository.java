@@ -19,6 +19,8 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @Query("select p from Participant p inner join p.post.participants participants where participants.user = ?1")
     List<Participant> findByPost_Participants_User(User user);
 
+    @Query("select p from Participant p where p.user.id = ?1")
+    List<Participant> findByUserId(Long userId);
 
 
     @Query("select p from Participant p inner join p.post.participants participants " +

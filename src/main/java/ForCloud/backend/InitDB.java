@@ -52,6 +52,19 @@ public class InitDB {
             Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
             em.persist(post5);
 
+            Chatting chatting1 = createChatting(1L, "채팅방1", "abcd", ProjectType.onGoing);
+            em.persist(chatting1);
+
+            Chatting chatting2 = createChatting(2L, "채팅방2", "abcde", ProjectType.onGoing);
+            em.persist(chatting2);
+
+            Chatting chatting3 = createChatting(3L, "채팅방3", "abcdf", ProjectType.completed);
+            em.persist(chatting3);
+
+            Chatting chatting4 = createChatting(4L, "채팅방4", "abcdg", ProjectType.completed);
+            em.persist(chatting4);
+
+
             Applicant applicant1 = createApplicant(user2, post1, "react");
             em.persist(applicant1);
 
@@ -61,14 +74,13 @@ public class InitDB {
             Applicant applicant3 = createApplicant(user4, post1, "springboot");
             em.persist(applicant3);
 
-            Participant participant1 = createParticipant(user1, post3, "react",ProjectType.onGoing);
+            Participant participant1 = createParticipant(user1, post3, chatting3, "react");
             em.persist(participant1);
 
-
-            Participant participant2 = createParticipant(user1, post5, "springboot",ProjectType.completed);
+            Participant participant2 = createParticipant(user1, post5, chatting4,"springboot");
             em.persist(participant2);
 
-            Participant participant3 = createParticipant(user2, post5, "springboot",ProjectType.completed);
+            Participant participant3 = createParticipant(user2, post5,chatting4, "springboot");
             em.persist(participant3);
 
             PostCategory post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
@@ -125,12 +137,12 @@ public class InitDB {
             return applicant;
        }
 
-        private Participant createParticipant(User user, Post post, String category, ProjectType projectType){
+        private Participant createParticipant(User user, Post post, Chatting chatting, String category){
             Participant participant = new Participant();
             participant.setPost(post);
             participant.setCategory(category);
+            participant.setChatting(chatting);
             participant.setUser(user);
-            participant.setProjectType(projectType);
             return participant;
         }
 
@@ -146,6 +158,14 @@ public class InitDB {
             post_category.setSpringboot(springboot);
             post_category.setSpring(spring);
             return post_category;
+       }
+       private Chatting createChatting(Long postId, String title, String filePath, ProjectType projectType){
+           Chatting chatting = new Chatting();
+           chatting.setPostId(postId);
+           chatting.setTitle(title);
+           chatting.setFilePath(filePath);
+           chatting.setProjectType(projectType);
+           return chatting;
        }
     }
 }
