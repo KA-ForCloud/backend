@@ -60,15 +60,25 @@ public class PostService {
         }
 
         public List<GetProjectListResponse> getMyProject(Long userId){
-            User user = userRepository.findById(userId).get();
-            List<Participant> participantList = participantRepository.findByPost_Participants_User(user);
+            List<Participant> participantList = participantRepository.findByUserId(userId);
             List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
             for(Participant participant : participantList){
+                // 채팅 Entity에 type이 생기면 변경할 예정
                 GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
-                getProjectListResponse.setPostResponse(new PostResponse(participant.getPost()));
-                getProjectListResponse.setProjectType(participant.getProjectType());
+                getProjectListResponse.setId(participant.getPost().getId());
+                getProjectListResponse.setContents(participant.getPost().getContents());
+                getProjectListResponse.setName(participant.getUser().getUser_name());
+                getProjectListResponse.setDuration(participant.getPost().getDuration());
+                getProjectListResponse.setPost_category(participant.getPost().getPost_category());
+                getProjectListResponse.setPost_name(participant.getPost().getPost_name());
+                getProjectListResponse.setPostType(participant.getPost().getPostType());
+                getProjectListResponse.setViews(participant.getPost().getViews());
+                getProjectListResponse.setEnd_time(participant.getPost().getEnd_time());
+                getProjectListResponse.setStart_time(participant.getPost().getStart_time());
+                getProjectListResponse.setProjectType(participant.getChatting().getProjectType());
 
                 getProjectListResponseList.add(getProjectListResponse);
+
             }
             return getProjectListResponseList;
         }
@@ -126,10 +136,8 @@ public class PostService {
         Participant participant = new Participant();
         User user = userRepository.findByUser_name(requestParticipant.getName()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
-
         participant.setPost(post);
         participant.setUser(user);
-        participant.setProjectType(ProjectType.onGoing);
         return new RequestParticipant(participantRepository.save(participant));
     }
 
