@@ -26,7 +26,7 @@ public class PostResponse {
 
     private Long views;
     public PostResponse(Post post){
-        this.id = post.getUser().getId();
+        this.id = post.getId();
         this.name = post.getUser().getUser_name();
         this.post_name = post.getPost_name();
         this.start_time =post.getStart_time();
