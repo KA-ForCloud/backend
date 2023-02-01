@@ -17,18 +17,18 @@ public class ChattingController {
     private final ChattingService chattingService;
 //    private final Logger logger= LoggerFactory.getLogger(ChattingController.class);
 
-//
-//    @GetMapping("/api/member/{memberId}/rooms")
-//    public BaseResponse<List<ChattingResponse>> getChattingList(@PathVariable(name="memberId") Long memberId){
-//        List<ChattingResponse> response=chattingService.getChattingList(memberId);
-//        return new BaseResponse<>(response);
-//    }
-//
-//    @DeleteMapping("/api/member/{memberId}/rooms/{roomId}")
-//    public BaseResponse<String> deleteRoom(@PathVariable(name="memberId")Long memberId,@PathVariable(name="roomId")Long roomId){
-//        String response=chattingService.deleteRoom(memberId,roomId);
-//
-//        return new BaseResponse<>(response);
-//    }
+
+    @GetMapping("/api/member/{memberId}/rooms")
+    public BaseResponse<List<ChattingResponse>> getChattingList(@PathVariable(name="memberId") Long memberId){
+        List<ChattingResponse> response=chattingService.getChattingList(memberId);
+        return new BaseResponse<>(response);
+    }
+
+    @DeleteMapping("/api/member/{memberId}/rooms/{roomId}")
+    public BaseResponse<String> deleteRoom(@PathVariable(name="memberId")Long memberId,@PathVariable(name="roomId")Long roomId){
+        String response=chattingService.deleteRoom(memberId,roomId);
+
+        return new BaseResponse<>(response);
+    }
 
 }

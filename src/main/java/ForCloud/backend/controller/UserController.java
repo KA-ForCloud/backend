@@ -33,20 +33,20 @@ public class UserController {
     KakaoService kakaoService;
 
 
-    @PostMapping("/user/test/{token}")
+    @PostMapping("/api/user/test/{token}")
     public void user(@PathVariable String token){
         System.out.println(token);
         kakaoService.getInfoByKakaoToken(token);
     }
 
-    @PostMapping("/user/register/{token}")
+    @PostMapping("/api/user/register/{token}")
     public User registerUser(@PathVariable String token) {
 
         return kakaoService.getInfoByKakaoToken(token);
     }
 
 
-    @PostMapping("/user/port/save/{user_id}")
+    @PostMapping("/api/user/port/save/{user_id}")
     public User savePort(@PathVariable Long user_id, @RequestBody UserDto userDto, @RequestParam String portname){
         System.out.println("ddd");
         System.out.println(userDto);
@@ -55,14 +55,14 @@ public class UserController {
     }
 
 
-    @PostMapping("/user/upload/{user_id}")
+    @PostMapping("/api/user/upload/{user_id}")
     public User uploadFile(MultipartFile multipartFile, @PathVariable Long user_id) throws IOException {
         multipartFile.isEmpty();/* 파일을 업로드 하지 않았을 경우 처리 */
         return dtoService.storeFile(multipartFile,user_id);
     }
 
 
-    @GetMapping("/user/attached/{filename}")
+    @GetMapping("/api/user/attached/{filename}")
     public void download(HttpServletResponse response,@PathVariable String filename) throws Exception {
         try {
             String path = "/Users/bagchanbin/upload/"+filename; // 경로에 접근할 때 역슬래시('\') 사용
@@ -94,7 +94,7 @@ public class UserController {
 
 
     @ResponseBody
-    @GetMapping("/user/{user}")
+    @GetMapping("/api/user/{user}")
     public Optional<User> getUserInfoByUserID(@PathVariable Long userId){
         return dtoService.getUserInfoByUserId(userId);
     }

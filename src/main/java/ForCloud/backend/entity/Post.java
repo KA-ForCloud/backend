@@ -63,5 +63,6 @@ public class Post {
         this.contents = postDto.getContents();
         this.status = postDto.getStatus();
         this.views = postDto.getViews();
+        this.postType=postDto.getPostType();
     }
 }

@@ -2,6 +2,7 @@ package ForCloud.backend.dto;
 
 
 import ForCloud.backend.entity.Post;
+import ForCloud.backend.type.PostType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,7 +17,7 @@ public class PostDto {
     private String post_name;
     private String contents;
     private Long views;
-
+    private PostType postType;
     private PostCategoryDto postCategoryDto;
 
     public PostDto(Post post){
@@ -26,6 +27,7 @@ public class PostDto {
         this.post_name = post.getPost_name();
         this.contents = post.getContents();
         this.views = post.getViews();
+        this.postType=post.getPostType();
     }
 
 }

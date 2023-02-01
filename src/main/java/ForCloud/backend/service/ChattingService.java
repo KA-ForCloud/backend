@@ -36,11 +36,11 @@ public class ChattingService {
     public List<ChattingResponse> getChattingList(Long memberId){
 
         User user = userRepository.findById(memberId).get();
-        List<Participant> participatingList=participantRepository.findByPost_Participants_User(user);
+        List<Participant> participatingList=participantRepository.findAllByUser_Id(memberId);
         List<ChattingResponse> chattingList=new ArrayList<>();
         for(Participant p:participatingList) {
             Chatting chatting=chattingRepository.findById(p.getChatting().getId()).get();
-            List<Participant> participantList=participantRepository.findByPost_Participants_Chatting(chatting);
+            List<Participant> participantList=participantRepository.findAllByChatting_Id(chatting.getId());
             List<ParticipantResponse> participantResponse=participantList.stream()
                 .map(pl->new ParticipantResponse(pl))
                 .collect(toList());
@@ -54,7 +54,7 @@ public class ChattingService {
     public String deleteRoom(Long memberId,Long roomId){
         Chatting chatting=chattingRepository.findById(roomId).get();
 
-        List<Participant> participantList=participantRepository.findByPost_Participants_Chatting(chatting);
+        List<Participant> participantList=participantRepository.findAllByChatting_Id(roomId);
         for(Participant p:participantList){
             participantRepository.delete(p);
         }

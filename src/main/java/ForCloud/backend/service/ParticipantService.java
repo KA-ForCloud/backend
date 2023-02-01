@@ -1,5 +1,6 @@
 package ForCloud.backend.service;
 
+import ForCloud.backend.dto.Participant.GetLastReadResponse;
 import ForCloud.backend.entity.Chatting;
 import ForCloud.backend.entity.Participant;
 import ForCloud.backend.entity.User;
@@ -24,6 +25,14 @@ public class ParticipantService {
 
     private final UserRepository userRepository;
     private final ChattingRepository chattingRepository;
+
+    /**
+     * 마지막으로 읽은 메세지 인덱스 업데이트
+     * @param memberId
+     * @param roomId
+     * @param lastId
+     * @return
+     */
     @Transactional
     public String updateLastRead(Long memberId,Long roomId,Long lastId){
 
@@ -31,21 +40,45 @@ public class ParticipantService {
         Chatting chatting = chattingRepository.findById(roomId).get();
 
         // TODO: 예외 처리
-        Participant participant=participantRepository.findByPost_Participants_UserAndPost_Participants_Chatting(user,chatting);
+        Participant participant=participantRepository.findByUser_IdAndChatting_Id(memberId,roomId);
 
         participant.setLast(lastId);
 
         return "업데이트 성공";
     }
 
+    /**
+     * 참여자의 채팅방 나가기
+     * @param memberId
+     * @param roomId
+     * @return
+     */
     @Transactional
     public String deleteParticipant(Long memberId,Long roomId){
 
+        Participant participant=participantRepository.findByUser_IdAndChatting_Id(memberId,roomId);
+
+        participantRepository.delete(participant);
+        return "나가기 성공";
+    }
+
+    /**
+     * 마지막으로 읽은 메세지 조회
+     * @param memberId
+     * @param roomId
+     * @return
+     */
+    @Transactional
+    public GetLastReadResponse getLastRead(Long memberId, Long roomId){
         User user = userRepository.findById(memberId).get();
         Chatting chatting = chattingRepository.findById(roomId).get();
 
-        Participant participant=participantRepository.findByPost_Participants_UserAndPost_Participants_Chatting(user,chatting);
-        participantRepository.delete(participant);
-        return "나가기 성공";
+        Participant participant=participantRepository.findByUser_IdAndChatting_Id(memberId,roomId);
+
+        GetLastReadResponse response=new GetLastReadResponse();
+        response.setMemberId(memberId);
+        response.setLastReadIndex(participant.getLast());
+
+        return response;
     }
 }

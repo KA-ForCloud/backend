@@ -12,6 +12,7 @@ import ForCloud.backend.repository.PostCategoryRepository;
 import ForCloud.backend.repository.PostRepository;
 import ForCloud.backend.repository.UserCategoryRepository;
 import ForCloud.backend.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Slf4j
 public class DtoService {
 
     private final UserRepository userRepository;

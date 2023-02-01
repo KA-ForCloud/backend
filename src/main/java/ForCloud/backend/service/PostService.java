@@ -60,7 +60,7 @@ public class PostService {
         }
 
         public List<GetProjectListResponse> getMyProject(Long userId){
-            List<Participant> participantList = participantRepository.findByUserId(userId);
+            List<Participant> participantList = participantRepository.findAllByUser_Id(userId);
             List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
             for(Participant participant : participantList){
                 // 채팅 Entity에 type이 생기면 변경할 예정

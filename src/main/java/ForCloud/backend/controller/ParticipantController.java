@@ -1,6 +1,7 @@
 package ForCloud.backend.controller;
 
 import ForCloud.backend.config.BaseResponse;
+import ForCloud.backend.dto.Participant.GetLastReadResponse;
 import ForCloud.backend.service.ParticipantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,19 @@ public class ParticipantController {
     @DeleteMapping("/api/member/{memberId}/rooms/{roomId}/participant")
     public BaseResponse<String> deleteParticipant(@PathVariable(name="memberId")Long memberId,@PathVariable(name="roomId")Long roomId){
         String response=participantService.deleteParticipant(memberId,roomId);
+
+        return new BaseResponse<>(response);
+    }
+
+    /**
+     * 마지막으로 읽은 메세지 조회
+     * @param memberId
+     * @param roomId
+     * @return
+     */
+    @GetMapping("/api/member/{memberId}/rooms/{roomId}")
+    public BaseResponse<GetLastReadResponse> getLastRead(@PathVariable(name="memberId")Long memberId, @PathVariable(name="roomId")Long roomId){
+        GetLastReadResponse response=participantService.getLastRead(memberId,roomId);
 
         return new BaseResponse<>(response);
     }
