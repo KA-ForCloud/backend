@@ -1,12 +1,17 @@
 pipeline {
     agent any
     tools {
-        gradle "gradle"
+        gradle 'gradle'
     }
     stages {
-        stage('Gradle') {
+        stage('Git Clone') {
             steps {
-                sh 'gradle --version'
+                git branch: 'cicdtest', url: 'https://github.com/KA-ForCloud/backend.git'
+            }
+        }
+        stage('BE-Build') {
+            steps {
+                    sh "./gradlew clean build"
             }
         }
     }
