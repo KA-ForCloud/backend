@@ -15,7 +15,7 @@ public class ApplicantResponse {
     private String requested;
 
     public ApplicantResponse(Applicant applicant){
-        this.id = applicant.getUser().getId();
+        this.id = applicant.getId();
         this.name = applicant.getUser().getUser_name();
         this.requested = applicant.getRequest();
     }

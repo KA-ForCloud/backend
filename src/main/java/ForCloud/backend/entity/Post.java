@@ -28,7 +28,7 @@ public class Post {
     private String post_name;
     private String start_time;
     private String end_time;
-    private String duration;
+    private Long duration;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
@@ -63,6 +63,6 @@ public class Post {
         this.contents = postDto.getContents();
         this.status = postDto.getStatus();
         this.views = postDto.getViews();
-        this.postType=postDto.getPostType();
+        this.duration = postDto.getDurations();
     }
 }

@@ -13,9 +13,11 @@ public class RequestParticipant {
     private Long postId;
     private String name;
     private String category;
+    private ProjectType projectType;
     public RequestParticipant(Participant participant){
         this.postId = participant.getPost().getId();
         this.name = participant.getUser().getUser_name();
         this.category = participant.getCategory();
+        this.projectType = participant.getProjectType();
     }
 }

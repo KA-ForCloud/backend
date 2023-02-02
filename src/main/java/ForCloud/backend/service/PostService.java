@@ -35,6 +35,9 @@ public class PostService {
 
         public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
+            for (Post post : postList){
+                System.out.println(post.getId());
+            }
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
                     .collect(Collectors.toList());
@@ -59,29 +62,29 @@ public class PostService {
             return postResponseList;
         }
 
-        public List<GetProjectListResponse> getMyProject(Long userId){
-            List<Participant> participantList = participantRepository.findAllByUser_Id(userId);
-            List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
-            for(Participant participant : participantList){
-                // 채팅 Entity에 type이 생기면 변경할 예정
-                GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
-                getProjectListResponse.setId(participant.getPost().getId());
-                getProjectListResponse.setContents(participant.getPost().getContents());
-                getProjectListResponse.setName(participant.getUser().getUser_name());
-                getProjectListResponse.setDuration(participant.getPost().getDuration());
-                getProjectListResponse.setPost_category(participant.getPost().getPost_category());
-                getProjectListResponse.setPost_name(participant.getPost().getPost_name());
-                getProjectListResponse.setPostType(participant.getPost().getPostType());
-                getProjectListResponse.setViews(participant.getPost().getViews());
-                getProjectListResponse.setEnd_time(participant.getPost().getEnd_time());
-                getProjectListResponse.setStart_time(participant.getPost().getStart_time());
-                getProjectListResponse.setProjectType(participant.getChatting().getProjectType());
+    public List<GetProjectListResponse> getMyProject(Long userId){
+        List<Participant> participantList = participantRepository.findAllByUser_Id(userId);
+        List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
+        for(Participant participant : participantList){
+            // 채팅 Entity에 type이 생기면 변경할 예정
+            GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
+            getProjectListResponse.setId(participant.getPost().getId());
+            getProjectListResponse.setContents(participant.getPost().getContents());
+            getProjectListResponse.setName(participant.getUser().getUser_name());
+            getProjectListResponse.setDuration(participant.getPost().getDuration());
+            getProjectListResponse.setPost_category(participant.getPost().getPost_category());
+            getProjectListResponse.setPost_name(participant.getPost().getPost_name());
+            getProjectListResponse.setPostType(participant.getPost().getPostType());
+            getProjectListResponse.setViews(participant.getPost().getViews());
+            getProjectListResponse.setEnd_time(participant.getPost().getEnd_time());
+            getProjectListResponse.setStart_time(participant.getPost().getStart_time());
+            getProjectListResponse.setProjectType(participant.getChatting().getProjectType());
 
-                getProjectListResponseList.add(getProjectListResponse);
+            getProjectListResponseList.add(getProjectListResponse);
 
-            }
-            return getProjectListResponseList;
         }
+        return getProjectListResponseList;
+    }
 
 
         public List<MemberTemperature> getTemperature(){
@@ -136,8 +139,10 @@ public class PostService {
         Participant participant = new Participant();
         User user = userRepository.findByUser_name(requestParticipant.getName()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
+
         participant.setPost(post);
         participant.setUser(user);
+        participant.setProjectType(ProjectType.onGoing);
         return new RequestParticipant(participantRepository.save(participant));
     }
 

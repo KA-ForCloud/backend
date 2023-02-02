@@ -2,6 +2,7 @@ package ForCloud.backend.service;
 
 
 
+import ForCloud.backend.dto.PostCategoryDto;
 import ForCloud.backend.dto.PostDto;
 import ForCloud.backend.dto.UserDto;
 import ForCloud.backend.entity.Post;
@@ -12,7 +13,7 @@ import ForCloud.backend.repository.PostCategoryRepository;
 import ForCloud.backend.repository.PostRepository;
 import ForCloud.backend.repository.UserCategoryRepository;
 import ForCloud.backend.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import ForCloud.backend.type.PostType;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -26,11 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Random;
 
 @Service
-@Slf4j
 public class DtoService {
 
     private final UserRepository userRepository;
@@ -53,6 +54,26 @@ public class DtoService {
     public Optional<User> getUserInfoByUserId(Long user_id){
         Optional<User> user = userRepository.findById(user_id);
         return user;
+    }
+
+    public Optional<UserCategory> getUserCategoryByUserId(Long user_id){
+        try {
+            Optional<UserCategory> userCategory = userCategoryRepository.findByUser_id(user_id);
+            return userCategory;
+        }
+        catch (NoSuchElementException e ){
+            throw new NoSuchElementException();
+        }
+    }
+
+    public Optional<Post> getPostByPostId(Long post_id){
+        try {
+            Optional<Post> post = postRepository.findById(post_id);
+            return post;
+        }
+        catch (NoSuchElementException e ){
+            throw new NoSuchElementException();
+        }
     }
 
     public User storeFile(MultipartFile multipartFile, Long user_id) throws IOException {
@@ -86,15 +107,35 @@ public class DtoService {
     public void savePost(PostDto postDto, Long user_id){
         try{
             Post post = new Post();
+
+
+            if(postDto.getId() != null){
+                post = postRepository.findById(postDto.getId()).get();
+            }
             post.setByDto(postDto);
             User user = userRepository.findById(user_id).get();
             post.setUser(user);
+            post.setPostType(PostType.recruiting);
             postRepository.save(post);
 
             PostCategory postCategory = new PostCategory();
-
+            postCategory.setType("recruits");
+            if (postDto.getPostCategoryDto().getId() != null){
+                postCategory = postCategoryRepository.findById(postDto.getPostCategoryDto().getId()).get();
+            }
+            else{
+                PostCategory postCategory2 = new PostCategory();
+                postCategory2.setType("current");
+                PostCategoryDto postCategoryDto = new PostCategoryDto(null, 0L,0L,0L,0L,0L,0L,null);
+                postCategory2.setByDto(postCategoryDto,post);
+                postCategoryRepository.save(postCategory2);
+            }
             postCategory.setByDto(postDto.getPostCategoryDto(),post);
             postCategoryRepository.save(postCategory);
+
+
+
+
 
 //            ChatDto chatDto = new ChatDto(user_id, post.getPost_id());
 //            Chat chat = new Chat();
@@ -181,4 +222,5 @@ public class DtoService {
             throw new RuntimeException(e);
         }
     }
+
 }

@@ -19,14 +19,14 @@ public class PostResponse {
     private String post_name;
     private String start_time;
     private String end_time;
-    private String duration;
+    private Long duration;
     private String contents;
     private List<PostCategory> post_category;
     private PostType postType;
 
     private Long views;
     public PostResponse(Post post){
-        this.id = post.getUser().getId();
+        this.id = post.getId();
         this.name = post.getUser().getUser_name();
         this.post_name = post.getPost_name();
         this.start_time =post.getStart_time();

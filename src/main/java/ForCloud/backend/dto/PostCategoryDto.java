@@ -9,6 +9,8 @@ import lombok.ToString;
 @ToString
 public class PostCategoryDto {
 
+    private Long id;
+
     private Long spring;
 
     private Long react;
@@ -22,4 +24,15 @@ public class PostCategoryDto {
     private Long springboot;
 
     private Long post_id;
+
+    public PostCategoryDto(Long id, Long spring, Long react, Long python, Long java, Long javascript, Long springboot, Long post_id){
+        this.id = id;
+        this.spring = spring;
+        this.react = react;
+        this.python = python;
+        this.java = java;
+        this.javascript = javascript;
+        this.springboot = springboot;
+        this.post_id = post_id;
+    }
 }

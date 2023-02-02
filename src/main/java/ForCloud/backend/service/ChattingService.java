@@ -42,8 +42,8 @@ public class ChattingService {
             Chatting chatting=chattingRepository.findById(p.getChatting().getId()).get();
             List<Participant> participantList=participantRepository.findAllByChatting_Id(chatting.getId());
             List<ParticipantResponse> participantResponse=participantList.stream()
-                .map(pl->new ParticipantResponse(pl))
-                .collect(toList());
+                    .map(pl->new ParticipantResponse(pl))
+                    .collect(toList());
             ChattingResponse res=new ChattingResponse(chatting,participantResponse,p.getLast());
             chattingList.add(res);
         }

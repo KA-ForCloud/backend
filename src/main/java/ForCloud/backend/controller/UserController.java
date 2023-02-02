@@ -4,6 +4,8 @@ import ForCloud.backend.dto.UserDto;
 import ForCloud.backend.entity.User;
 import ForCloud.backend.service.DtoService;
 import ForCloud.backend.service.KakaoService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,10 +49,11 @@ public class UserController {
 
 
     @PostMapping("/api/user/port/save/{user_id}")
-    public User savePort(@PathVariable Long user_id, @RequestBody UserDto userDto, @RequestParam String portname){
-        System.out.println("ddd");
-        System.out.println(userDto);
-        System.out.println("dddg");
+    public User savePort(@PathVariable Long user_id, @RequestBody UserDto userDto, @RequestParam String portname) throws JsonProcessingException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(userDto);
+        System.out.println(jsonInString);
         return dtoService.updatePort(user_id, userDto,portname);
     }
 
@@ -61,6 +64,10 @@ public class UserController {
         return dtoService.storeFile(multipartFile,user_id);
     }
 
+    @GetMapping("/api/user/info/{user_id}")
+    public User getUserInfoByUserId(@PathVariable Long user_id){
+        return dtoService.getUserInfoByUserId(user_id).get();
+    }
 
     @GetMapping("/api/user/attached/{filename}")
     public void download(HttpServletResponse response,@PathVariable String filename) throws Exception {
@@ -84,6 +91,9 @@ public class UserController {
             throw new Exception("download error");
         }
     }
+
+
+
 
 
 

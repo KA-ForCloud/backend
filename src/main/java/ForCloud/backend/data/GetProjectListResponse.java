@@ -20,7 +20,7 @@ public class GetProjectListResponse {
     private String post_name;
     private String start_time;
     private String end_time;
-    private String duration;
+    private Long duration;
     private String contents;
     private List<PostCategory> post_category;
     private PostType postType;

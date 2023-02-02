@@ -1,12 +1,10 @@
 package ForCloud.backend.entity;
 
 import ForCloud.backend.type.ProjectType;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -24,9 +22,6 @@ public class Chatting {
 
     private String filePath;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy="chatting",cascade = CascadeType.ALL)
-    private List<Participant> participantList;
-
     private ProjectType projectType;
+
 }

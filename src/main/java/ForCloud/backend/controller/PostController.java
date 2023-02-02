@@ -7,13 +7,15 @@ import ForCloud.backend.entity.Post;
 import ForCloud.backend.entity.PostCategory;
 import ForCloud.backend.service.DtoService;
 import ForCloud.backend.service.PostService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @ResponseBody
 @RestController
 @RequiredArgsConstructor
@@ -34,6 +36,8 @@ public class PostController {
 
         return new BaseResponse<>(postList);
     }
+
+
 
     @GetMapping("/api/requestedPost/{userId}")
     public BaseResponse<List<PostResponse>> getRequestedPost(@PathVariable(name="userId") Long userId){
@@ -114,9 +118,17 @@ public class PostController {
     }
 
     @PostMapping("/api/post/save/{user_id}")
-    public void savePost(@PathVariable Long user_id, @RequestBody PostDto postDto){
+    public void savePost(@PathVariable Long user_id, @RequestBody PostDto postDto) throws JsonProcessingException {
         System.out.println(user_id);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = mapper.writeValueAsString(postDto);
         System.out.println(postDto);
+        System.out.println(jsonInString);
         dtoService.savePost(postDto, user_id);
+    }
+
+    @GetMapping("/api/post/info/{postId}")
+    public Post getPost(@PathVariable Long postId){
+        return dtoService.getPostByPostId(postId).get();
     }
 }
