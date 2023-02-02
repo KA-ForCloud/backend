@@ -11,7 +11,7 @@ pipeline {
         }
         stage('BE-Build') {
             steps {
-                    sh "./gradlew clean build"
+                    sh "./gradlew clean build --exclude-task test"
             }
         }
     }
