@@ -4,11 +4,11 @@ import ForCloud.backend.dto.Chatting.ChattingResponse;
 import ForCloud.backend.dto.Participant.ParticipantResponse;
 import ForCloud.backend.entity.Chatting;
 import ForCloud.backend.entity.Participant;
+import ForCloud.backend.entity.Post;
 import ForCloud.backend.entity.User;
 import ForCloud.backend.repository.*;
+import ForCloud.backend.type.ProjectType;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,18 +20,22 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class ChattingService {
-    @Autowired
-    public ChattingService(UserRepository userRepository, ChattingRepository chattingRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository, ParticipantRepository participantRepository) {
 
-        this.userRepository = userRepository;
-        this.participantRepository = participantRepository;
-        this.chattingRepository = chattingRepository;
-    }
+//    @Autowired
+//    public ChattingService(UserRepository userRepository, ChattingRepository chattingRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository, ParticipantRepository participantRepository) {
+//
+//        this.userRepository = userRepository;
+//        this.participantRepository = participantRepository;
+//        this.chattingRepository = chattingRepository;
+//        this.postRepository = postRepository;
+//    }
     private final ChattingRepository chattingRepository;
     private final ParticipantRepository participantRepository;
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     @Transactional
     public List<ChattingResponse> getChattingList(Long memberId){
 
@@ -53,7 +57,8 @@ public class ChattingService {
     @Transactional
     public String deleteRoom(Long memberId,Long roomId){
         Chatting chatting=chattingRepository.findById(roomId).get();
-
+        Post post=postRepository.findById(chatting.getPostId()).get();
+        postRepository.delete(post);
         List<Participant> participantList=participantRepository.findAllByChatting_Id(roomId);
         for(Participant p:participantList){
             participantRepository.delete(p);
@@ -61,5 +66,14 @@ public class ChattingService {
 
         chattingRepository.delete(chatting);
         return "삭제 성공";
+    }
+
+    @Transactional
+    public String endRoom(Long memberId,Long roomId){
+
+        Chatting chatting=chattingRepository.findById(roomId).get();
+        chatting.setProjectType(ProjectType.completed);
+
+        return "종료 성공";
     }
 }

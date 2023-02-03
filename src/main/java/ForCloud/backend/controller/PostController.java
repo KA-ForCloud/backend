@@ -10,6 +10,7 @@ import ForCloud.backend.service.PostService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @ResponseBody
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -80,8 +82,9 @@ public class PostController {
     }
 
     @PostMapping("/api/registerParticipant")
-    public BaseResponse<RequestParticipant> createParticipant(@RequestBody RequestParticipant requestParticipant){
-        RequestParticipant returnParticipant = postService.registerParticipant(requestParticipant);
+    public BaseResponse<PostParticipantResponse> createApplicant(@RequestBody RequestParticipant requestParticipant){
+        PostParticipantResponse returnParticipant = postService.registerParticipant(requestParticipant);
+
         return new BaseResponse<>(returnParticipant);
     }
 
@@ -117,13 +120,16 @@ public class PostController {
     }
 
     @PostMapping("/api/post/save/{user_id}")
-    public void savePost(@PathVariable Long user_id, @RequestBody PostDto postDto) throws JsonProcessingException {
+    public BaseResponse<Long> savePost(@PathVariable Long user_id, @RequestBody PostDto postDto) throws JsonProcessingException {
         System.out.println(user_id);
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(postDto);
         System.out.println(postDto);
         System.out.println(jsonInString);
-        dtoService.savePost(postDto, user_id);
+        Long chattingId=dtoService.savePost(postDto, user_id);
+        log.info("chattingId: {}",chattingId);
+        return new BaseResponse<>(chattingId);
+
     }
 
     @GetMapping("/api/post/info/{postId}")
