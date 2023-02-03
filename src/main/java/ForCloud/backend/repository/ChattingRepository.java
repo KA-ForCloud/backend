@@ -10,4 +10,6 @@ public interface ChattingRepository extends JpaRepository<Chatting,Long> {
 
     @Override
     Optional<Chatting> findById(Long aLong);
+
+    Chatting findByPostId(Long postId);
 }

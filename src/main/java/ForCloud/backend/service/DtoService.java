@@ -5,15 +5,11 @@ package ForCloud.backend.service;
 import ForCloud.backend.dto.PostCategoryDto;
 import ForCloud.backend.dto.PostDto;
 import ForCloud.backend.dto.UserDto;
-import ForCloud.backend.entity.Post;
-import ForCloud.backend.entity.PostCategory;
-import ForCloud.backend.entity.User;
-import ForCloud.backend.entity.UserCategory;
-import ForCloud.backend.repository.PostCategoryRepository;
-import ForCloud.backend.repository.PostRepository;
-import ForCloud.backend.repository.UserCategoryRepository;
-import ForCloud.backend.repository.UserRepository;
+import ForCloud.backend.entity.*;
+import ForCloud.backend.repository.*;
+import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.PostType;
+import ForCloud.backend.type.ProjectType;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -41,14 +37,19 @@ public class DtoService {
 
     private final UserCategoryRepository userCategoryRepository;
 
+    private final ChattingRepository chattingRepository;
+    private final ParticipantRepository participantRepository;
+
 
     @Autowired
-    public DtoService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, UserCategoryRepository userCategoryRepository) {
+    public DtoService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, UserCategoryRepository userCategoryRepository, ChattingRepository chattingRepository, ParticipantRepository participantRepository) {
 
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postCategoryRepository = postCategoryRepository;
         this.userCategoryRepository = userCategoryRepository;
+        this.chattingRepository = chattingRepository;
+        this.participantRepository = participantRepository;
     }
 
     public Optional<User> getUserInfoByUserId(Long user_id){
@@ -104,7 +105,7 @@ public class DtoService {
         return user;
     }
 
-    public void savePost(PostDto postDto, Long user_id){
+    public Long savePost(PostDto postDto, Long user_id){
         try{
             Post post = new Post();
 
@@ -133,18 +134,27 @@ public class DtoService {
             postCategory.setByDto(postDto.getPostCategoryDto(),post);
             postCategoryRepository.save(postCategory);
 
+            Chatting chatting=new Chatting();
+            chatting.setPostId(post.getId());
+            chatting.setTitle(post.getPost_name());
+            chatting.setProjectType(ProjectType.onGoing);
+            chatting.setFilePath("filePath");
+            chattingRepository.save(chatting);
 
+            Participant participant=new Participant();
+            participant.setChatting(chatting);
+            participant.setUser(user);
+            participant.setType(ParticipantType.팀장);
+            participant.setPost(post);
+            participant.setLast(0L);
+            participantRepository.save(participant);
 
-
-
-//            ChatDto chatDto = new ChatDto(user_id, post.getPost_id());
-//            Chat chat = new Chat();
-//            chat.setByDto(chatDto);
-//            Create_Chatting(user_id);
+            return chatting.getId();
         }
         catch (Exception e){
             throw new IllegalStateException();
         }
+
     }
 
     public User updatePort(Long user_id, UserDto userDto, String portname){

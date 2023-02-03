@@ -3,6 +3,7 @@ package ForCloud.backend.service;
 import ForCloud.backend.data.*;
 import ForCloud.backend.entity.*;
 import ForCloud.backend.repository.*;
+import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,22 @@ import java.util.stream.Collectors;
 public class PostService {
 
         @Autowired
-        public PostService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository,ParticipantRepository participantRepository) {
+        public PostService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository, ParticipantRepository participantRepository, ChattingRepository chattingRepository) {
 
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postCategoryRepository = postCategoryRepository;
         this.applicantRepository = applicantRepository;
         this.participantRepository = participantRepository;
-    }
+            this.chattingRepository = chattingRepository;
+        }
         private final PostRepository postRepository;
         private final ApplicantRepository applicantRepository;
         private final PostCategoryRepository postCategoryRepository;
         private final UserRepository userRepository;
 
         private final ParticipantRepository participantRepository;
+        private final ChattingRepository chattingRepository;
 
         public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
@@ -135,15 +138,24 @@ public class PostService {
     }
 
     @Transactional
-    public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
+    public PostParticipantResponse registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
         User user = userRepository.findByUser_name(requestParticipant.getName()).get();
+//        User user=userRepository.findById(requestParticipant.getCategory());
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
+        Chatting chatting=chattingRepository.findByPostId(post.getId());
 
         participant.setPost(post);
         participant.setUser(user);
         participant.setProjectType(ProjectType.onGoing);
-        return new RequestParticipant(participantRepository.save(participant));
+        participant.setChatting(chatting);
+        participant.setType(ParticipantType.팀원);
+        participant.setLast(0L);
+        participant.setCategory(requestParticipant.getCategory());
+        participantRepository.save(participant);
+        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),user.getUser_name(),chatting.getId());
+
+        return response;
     }
 
     @Transactional
