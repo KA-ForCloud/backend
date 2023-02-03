@@ -55,12 +55,11 @@ public class PostController {
         return new BaseResponse<>(postList);
     }
 
+    @GetMapping("/api/popularCategory")
+    public BaseResponse<List<PopularCategoryResponse>> getPopularCategoryList () {
+        List<PopularCategoryResponse> popularCategoryResponseList = postService.getPopularCategory();
 
-    @GetMapping("/api/temperature")
-    public BaseResponse<List<MemberTemperature>> getTemperatureList () {
-        List<MemberTemperature> memberTemperatureList = postService.getTemperature();
-
-        return new BaseResponse<>(memberTemperatureList);
+        return new BaseResponse<>(popularCategoryResponseList);
     }
 
     @GetMapping("/api/applicant/{postId}")
@@ -85,12 +84,13 @@ public class PostController {
     @PostMapping("/api/registerParticipant")
     public BaseResponse<PostParticipantResponse> createApplicant(@RequestBody RequestParticipant requestParticipant){
         PostParticipantResponse returnParticipant = postService.registerParticipant(requestParticipant);
+
         return new BaseResponse<>(returnParticipant);
     }
 
-    @DeleteMapping("/api/applicant/{postId}/{userName}")
-    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "userName")String name){
-        DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, name);
+    @DeleteMapping("/api/applicant/{postId}/{userId}")
+    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "userId")Long userId){
+        DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, userId);
         return new BaseResponse<>(deleteApplicant);
     }
 
@@ -107,9 +107,9 @@ public class PostController {
         return new BaseResponse<>(post);
     }
 
-    @PatchMapping("/api/postCategory/{postId}/{name}")
-    public BaseResponse<PostCategory> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="name")String name){
-        PostCategory post_category = postService.updateCurrentCategory(postId, name);
+    @PatchMapping("/api/postCategory/{postId}/{userId}")
+    public BaseResponse<PostCategory> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="userId")Long userId){
+        PostCategory post_category = postService.updateCurrentCategory(postId, userId);
         return new BaseResponse<>(post_category);
     }
 

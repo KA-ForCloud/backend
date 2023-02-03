@@ -154,7 +154,10 @@
 //
 //
 //import ForCloud.backend.entity.*;
+
 //import ForCloud.backend.repository.ChattingRepository;
+
+
 //import ForCloud.backend.type.ParticipantType;
 //import ForCloud.backend.type.PostType;
 //import ForCloud.backend.type.ProjectType;
@@ -182,6 +185,7 @@
 //    @Transactional
 //    @RequiredArgsConstructor
 //    static class InitService{
+
 //
 //        private final EntityManager em;
 //        private final ChattingRepository chattingRepository;
@@ -217,6 +221,55 @@
 ////            Chatting schatting1=createSingleChatting(member1,member2); em.persist(schatting1);
 ////            Chatting schatting2=createSingleChatting(member1,member3); em.persist(schatting2);
 ////            Chatting schatting3=createSingleChatting(member1,member4); em.persist(schatting3);
+
+//        private final EntityManager em;
+//
+//        public void dbInit1(){
+//            User user1 = createMember("a@gmail.com","aaa",36.5);
+//            em.persist(user1);
+//
+//            User user2 = createMember("b@gmail.com","bbb",36.7);
+//            em.persist(user2);
+//
+//            User user3 = createMember("c@gmail.com","ccc",36.8);
+//            em.persist(user3);
+//
+//            User user4 = createMember("d@gmail.com","ddd",36.4);
+//            em.persist(user4);
+//
+//            User user5 = createMember("e@gmail.com","eee",36.9);
+//            em.persist(user5);
+//
+//            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", 3L, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
+//            em.persist(post1);
+//
+//            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", 2L, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
+//            em.persist(post2);
+//
+//            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", 4L, "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+//            em.persist(post3);
+//
+//            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", 3L, "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+//            em.persist(post5);
+//
+//            Participant participant1 = createParticipant(user1, post3, "react", ParticipantType.팀장);
+//            em.persist(participant1);
+//
+//            Participant participant3 = createParticipant(user2, post5, "springboot",ParticipantType.팀장);
+//            em.persist(participant3);
+//
+//            PostCategory post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
+//            em.persist(post_category1);
+//
+//            PostCategory post_category2 = createPost_category(post1, "current",0L,0L,0L,0L,0L,0L);
+//            em.persist(post_category2);
+//
+//            PostCategory post_category3 = createPost_category(post2, "recruits",3L,3L,0L,0L,0L,0L);
+//            em.persist(post_category3);
+//
+//            PostCategory post_category4 = createPost_category(post2, "current",0L,0L,0L,0L,0L,0L);
+//            em.persist(post_category4);
+
 //
 //        }
 //
@@ -259,12 +312,40 @@
 //            return post;
 //        }
 //
+
 //        private Applicant createApplicant(User member,Post post){
 //            Applicant applicant=new Applicant();
+
+//        private User createMember(String email, String username, double temperature){
+//           User user =new User();
+//           user.setUser_email(email);
+//           user.setUser_name(username);
+//           user.setTemperature(temperature);
+//           return user;
+//       }
+//
+//       private Post createPost(User user, String title, String date, String period, Long duration, String contents, PostType type, Long view){
+//           Post post = new Post();
+//           post.setUser(user);
+//           post.setPost_name(title);
+//           post.setStart_time(date);
+//           post.setEnd_time(period);
+//           post.setDuration(duration);
+//           post.setContents(contents);
+//           post.setPostType(type);
+//           post.setViews(view);
+//           return post;
+//       }
+//
+//       private Applicant createApplicant(User user, Post post, String requested){
+//            Applicant applicant = new Applicant();
+//            applicant.setRequest(requested);
+
 //            applicant.setPost(post);
 //            applicant.setUser(member);
 //
 //            return applicant;
+
 //        }
 //
 //        private Participant createParticipant(User member,Long chattingId){
@@ -275,6 +356,16 @@
 //            participant.setType(ParticipantType.팀원);
 //            participant.setChatting(chatting);
 //            participant.setLast(0L);
+
+//       }
+//
+//        private Participant createParticipant(User user, Post post, String category, ParticipantType participantType){
+//            Participant participant = new Participant();
+//            participant.setPost(post);
+//            participant.setCategory(category);
+//            participant.setUser(user);
+//            participant.setType(participantType);
+
 //            return participant;
 //        }
 //

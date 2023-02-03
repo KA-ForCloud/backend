@@ -11,8 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,9 +37,6 @@ public class PostService {
 
         public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
-            for (Post post : postList){
-                System.out.println(post.getId());
-            }
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
                     .collect(Collectors.toList());
@@ -48,7 +44,6 @@ public class PostService {
         }
 
         public List<PostResponse> getMyPost(Long userId){
-            User user = userRepository.findById(userId).get();
             List<Post> postList = postRepository.findAllByUser_Id(userId);
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
@@ -89,27 +84,6 @@ public class PostService {
         return getProjectListResponseList;
     }
 
-
-        public List<MemberTemperature> getTemperature(){
-           List<User> allNameSortedByTemperature =
-                   userRepository.findAll(Sort.by("temperature").descending());
-
-            List<MemberTemperature> memberTemperatureList = new ArrayList<>();
-
-            int i=0;
-            for(User m : allNameSortedByTemperature){
-                if(i==5) break;
-                MemberTemperature memberTemperature = new MemberTemperature();
-                memberTemperature.setName(m.getUser_name());
-                memberTemperature.setTemperature(m.getTemperature());
-
-                memberTemperatureList.add(memberTemperature);
-                i++;
-            }
-
-            return memberTemperatureList;
-        }
-
         public List<ApplicantResponse> getApplicant (Long postId){
             List<Applicant> applicant = applicantRepository.findAllByPost_id(postId);
 
@@ -126,6 +100,52 @@ public class PostService {
             return postCategoryResponse;
         }
 
+        public List<PopularCategoryResponse> getPopularCategory (){
+            List<PostCategory> postCategoryList = postCategoryRepository.findAllByType("recruits");
+            List<PopularCategoryResponse> popularCategoryResponseList = new ArrayList<>();
+            Map<String, Integer> map = new HashMap<>();
+            map.put("react", 0);
+            map.put("java", 0);
+            map.put("javascript", 0);
+            map.put("python", 0);
+            map.put("spring", 0);
+            map.put("springboot", 0);
+
+            for(PostCategory postCategory : postCategoryList){
+                if(postCategory.getReact() > 0){
+                    map.put("react", map.get("react") + 1);
+                }
+                if(postCategory.getJava() >0){
+                    map.put("java", map.get("java") + 1);
+                }
+                if(postCategory.getJavascript() >0){
+                    map.put("javascript", map.get("javascript") + 1);
+                }
+                if(postCategory.getPython() >0){
+                    map.put("python", map.get("python") + 1);
+                }
+                if(postCategory.getSpring() >0){
+                    map.put("spring", map.get("spring") + 1);
+                }
+                if(postCategory.getSpringboot() >0){
+                    map.put("springboot", map.get("springboot") + 1);
+                }
+            }
+            List<String> keySet = new ArrayList<>(map.keySet());
+            keySet.sort((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
+
+            int i=0;
+            for(String key : keySet){
+                if(i==3) break;
+                PopularCategoryResponse popularCategoryResponse = new PopularCategoryResponse();
+                popularCategoryResponse.setImg("");
+                popularCategoryResponse.setCategory_name(key);
+                popularCategoryResponseList.add(popularCategoryResponse);
+                i++;
+            }
+            return popularCategoryResponseList;
+        }
+
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
             Applicant applicant = new Applicant();
@@ -140,13 +160,18 @@ public class PostService {
     @Transactional
     public PostParticipantResponse registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
+
         User user = userRepository.findByUser_name(requestParticipant.getName()).get();
 //        User user=userRepository.findById(requestParticipant.getCategory());
+
+        User user = userRepository.findById(requestParticipant.getUserId()).get();
+
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
         Chatting chatting=chattingRepository.findByPostId(post.getId());
 
         participant.setPost(post);
         participant.setUser(user);
+
         participant.setProjectType(ProjectType.onGoing);
         participant.setChatting(chatting);
         participant.setType(ParticipantType.팀원);
@@ -156,14 +181,15 @@ public class PostService {
         PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),user.getUser_name(),chatting.getId());
 
         return response;
+
     }
 
     @Transactional
-    public DeleteApplicant deleteApplicant (Long postId, String name){
-            Applicant applicant = applicantRepository.findByPost_id_UserName(postId, name).get();
+    public DeleteApplicant deleteApplicant (Long postId, Long userId){
+            Applicant applicant = applicantRepository.findByPost_UserId(postId, userId).get();
             applicantRepository.delete(applicant);
 
-            return new DeleteApplicant(postId, name);
+            return new DeleteApplicant(postId, userId);
     }
 
     @Transactional
@@ -183,13 +209,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostCategory updateCurrentCategory(Long postId, String name){
+    public PostCategory updateCurrentCategory(Long postId, Long userId){
         List<PostCategory> post_categoryList = postCategoryRepository.findAllByPostId(postId);
-        User user = userRepository.findByUser_name(name).get();
         List<Applicant> applicantList = applicantRepository.findAllByPost_id(postId);
         String category = "";
         for(int i=0; i<applicantList.size(); i++){
-            if(user.getUser_name().equals(applicantList.get(i).getUser().getUser_name())){
+            if(userId == applicantList.get(i).getUser().getId()){
                 category = applicantList.get(i).getRequest();
                 break;
             }
