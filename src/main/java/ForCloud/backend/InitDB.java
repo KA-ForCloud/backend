@@ -1,6 +1,7 @@
 //package ForCloud.backend;
 //
 //import ForCloud.backend.entity.*;
+//import ForCloud.backend.type.ParticipantType;
 //import ForCloud.backend.type.PostType;
 //import ForCloud.backend.type.ProjectType;
 //import lombok.RequiredArgsConstructor;
@@ -40,35 +41,22 @@
 //            User user5 = createMember("e@gmail.com","eee",36.9);
 //            em.persist(user5);
 //
-//            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
+//            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", 3L, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
 //            em.persist(post1);
 //
-//            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
+//            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", 2L, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
 //            em.persist(post2);
 //
-//            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+//            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", 4L, "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
 //            em.persist(post3);
 //
-//            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+//            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", 3L, "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
 //            em.persist(post5);
 //
-//            Applicant applicant1 = createApplicant(user2, post1, "react");
-//            em.persist(applicant1);
-//
-//            Applicant applicant2 = createApplicant(user3, post1, "springboot");
-//            em.persist(applicant2);
-//
-//            Applicant applicant3 = createApplicant(user4, post1, "springboot");
-//            em.persist(applicant3);
-//
-//            Participant participant1 = createParticipant(user1, post3, "react",ProjectType.onGoing);
+//            Participant participant1 = createParticipant(user1, post3, "react", ParticipantType.팀장);
 //            em.persist(participant1);
 //
-//
-//            Participant participant2 = createParticipant(user1, post5, "springboot",ProjectType.completed);
-//            em.persist(participant2);
-//
-//            Participant participant3 = createParticipant(user2, post5, "springboot",ProjectType.completed);
+//            Participant participant3 = createParticipant(user2, post5, "springboot",ParticipantType.팀장);
 //            em.persist(participant3);
 //
 //            PostCategory post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
@@ -104,7 +92,7 @@
 //           return user;
 //       }
 //
-//       private Post createPost(User user, String title, String date, String period, String duration, String contents, PostType type, Long view){
+//       private Post createPost(User user, String title, String date, String period, Long duration, String contents, PostType type, Long view){
 //           Post post = new Post();
 //           post.setUser(user);
 //           post.setPost_name(title);
@@ -125,12 +113,12 @@
 //            return applicant;
 //       }
 //
-//        private Participant createParticipant(User user, Post post, String category, ProjectType projectType){
+//        private Participant createParticipant(User user, Post post, String category, ParticipantType participantType){
 //            Participant participant = new Participant();
 //            participant.setPost(post);
 //            participant.setCategory(category);
 //            participant.setUser(user);
-//            participant.setProjectType(projectType);
+//            participant.setType(participantType);
 //            return participant;
 //        }
 //

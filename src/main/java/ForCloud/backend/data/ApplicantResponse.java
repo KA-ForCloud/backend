@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicantResponse {
-    private Long id;
+    private Long userId;
     private String name;
 
     private String requested;
 
     public ApplicantResponse(Applicant applicant){
-        this.id = applicant.getId();
+        this.userId = applicant.getUser().getId();
         this.name = applicant.getUser().getUser_name();
         this.requested = applicant.getRequest();
     }
