@@ -37,5 +37,4 @@ public class Participant {
     private Long last;
     private String category;
 
-    private ProjectType projectType;
 }

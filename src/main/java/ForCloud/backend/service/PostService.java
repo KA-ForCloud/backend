@@ -3,6 +3,7 @@ package ForCloud.backend.service;
 import ForCloud.backend.data.*;
 import ForCloud.backend.entity.*;
 import ForCloud.backend.repository.*;
+import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,21 +158,21 @@ public class PostService {
     @Transactional
     public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
-        User user = userRepository.findByUser_name(requestParticipant.getName()).get();
+        User user = userRepository.findById(requestParticipant.getUserId()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
 
         participant.setPost(post);
         participant.setUser(user);
-        participant.setProjectType(ProjectType.onGoing);
+        participant.setType(ParticipantType.팀원);
         return new RequestParticipant(participantRepository.save(participant));
     }
 
     @Transactional
-    public DeleteApplicant deleteApplicant (Long postId, String name){
-            Applicant applicant = applicantRepository.findByPost_id_UserName(postId, name).get();
+    public DeleteApplicant deleteApplicant (Long postId, Long userId){
+            Applicant applicant = applicantRepository.findByPost_UserId(postId, userId).get();
             applicantRepository.delete(applicant);
 
-            return new DeleteApplicant(postId, name);
+            return new DeleteApplicant(postId, userId);
     }
 
     @Transactional
@@ -191,13 +192,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostCategory updateCurrentCategory(Long postId, String name){
+    public PostCategory updateCurrentCategory(Long postId, Long userId){
         List<PostCategory> post_categoryList = postCategoryRepository.findAllByPostId(postId);
-        User user = userRepository.findByUser_name(name).get();
         List<Applicant> applicantList = applicantRepository.findAllByPost_id(postId);
         String category = "";
         for(int i=0; i<applicantList.size(); i++){
-            if(user.getUser_name().equals(applicantList.get(i).getUser().getUser_name())){
+            if(userId == applicantList.get(i).getUser().getId()){
                 category = applicantList.get(i).getRequest();
                 break;
             }

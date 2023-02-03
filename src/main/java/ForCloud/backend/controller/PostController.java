@@ -80,14 +80,14 @@ public class PostController {
     }
 
     @PostMapping("/api/registerParticipant")
-    public BaseResponse<RequestParticipant> createApplicant(@RequestBody RequestParticipant requestParticipant){
+    public BaseResponse<RequestParticipant> createParticipant(@RequestBody RequestParticipant requestParticipant){
         RequestParticipant returnParticipant = postService.registerParticipant(requestParticipant);
         return new BaseResponse<>(returnParticipant);
     }
 
-    @DeleteMapping("/api/applicant/{postId}/{userName}")
-    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "userName")String name){
-        DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, name);
+    @DeleteMapping("/api/applicant/{postId}/{userId}")
+    public BaseResponse<DeleteApplicant> deleteApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "userId")Long userId){
+        DeleteApplicant deleteApplicant = postService.deleteApplicant(postId, userId);
         return new BaseResponse<>(deleteApplicant);
     }
 
@@ -104,9 +104,9 @@ public class PostController {
         return new BaseResponse<>(post);
     }
 
-    @PatchMapping("/api/postCategory/{postId}/{name}")
-    public BaseResponse<PostCategory> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="name")String name){
-        PostCategory post_category = postService.updateCurrentCategory(postId, name);
+    @PatchMapping("/api/postCategory/{postId}/{userId}")
+    public BaseResponse<PostCategory> updateCategory(@PathVariable(name="postId")Long postId, @PathVariable(name="userId")Long userId){
+        PostCategory post_category = postService.updateCurrentCategory(postId, userId);
         return new BaseResponse<>(post_category);
     }
 

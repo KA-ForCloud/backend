@@ -1,6 +1,7 @@
 package ForCloud.backend.data;
 
 import ForCloud.backend.entity.Participant;
+import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.ProjectType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestParticipant {
     private Long postId;
-    private String name;
-    private String category;
-    private ProjectType projectType;
+    private Long userId;
+
     public RequestParticipant(Participant participant){
         this.postId = participant.getPost().getId();
-        this.name = participant.getUser().getUser_name();
-        this.category = participant.getCategory();
-        this.projectType = participant.getProjectType();
+        this.userId = participant.getUser().getId();
     }
 }
