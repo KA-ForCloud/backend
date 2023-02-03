@@ -12,6 +12,7 @@ pipeline {
         stage('BE-Build') {
             steps {
                     sh "./gradlew clean build --exclude-task test"
+                    slackSend (channel: '#migrator', color: '#FFFF00', message: "Build Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             }
         }
         stage('Deploy') {
@@ -25,6 +26,7 @@ pipeline {
                         ssh -t centos@210.109.62.6 ./deploy.sh
                     '''
                     echo "Success"
+                    slackSend (channel: '#migrator', color: '#FFFF00', message: "Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
                 }
             }
         }
