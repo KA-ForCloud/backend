@@ -10,8 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,9 +34,6 @@ public class PostService {
 
         public List<PostResponse> getAllPosts(){
             List<Post> postList = postRepository.findAll();
-            for (Post post : postList){
-                System.out.println(post.getId());
-            }
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
                     .collect(Collectors.toList());
@@ -45,7 +41,6 @@ public class PostService {
         }
 
         public List<PostResponse> getMyPost(Long userId){
-            User user = userRepository.findById(userId).get();
             List<Post> postList = postRepository.findAllByUser_Id(userId);
             List<PostResponse> postResponseList = postList.stream()
                     .map(p -> new PostResponse(p))
@@ -86,27 +81,6 @@ public class PostService {
         return getProjectListResponseList;
     }
 
-
-        public List<MemberTemperature> getTemperature(){
-           List<User> allNameSortedByTemperature =
-                   userRepository.findAll(Sort.by("temperature").descending());
-
-            List<MemberTemperature> memberTemperatureList = new ArrayList<>();
-
-            int i=0;
-            for(User m : allNameSortedByTemperature){
-                if(i==5) break;
-                MemberTemperature memberTemperature = new MemberTemperature();
-                memberTemperature.setName(m.getUser_name());
-                memberTemperature.setTemperature(m.getTemperature());
-
-                memberTemperatureList.add(memberTemperature);
-                i++;
-            }
-
-            return memberTemperatureList;
-        }
-
         public List<ApplicantResponse> getApplicant (Long postId){
             List<Applicant> applicant = applicantRepository.findAllByPost_id(postId);
 
@@ -121,6 +95,52 @@ public class PostService {
             PostCategory postCategory = postCategoryRepository.findById(postId, "current").get();
             PostCategoryResponse postCategoryResponse = new PostCategoryResponse(postCategory);
             return postCategoryResponse;
+        }
+
+        public List<PopularCategoryResponse> getPopularCategory (){
+            List<PostCategory> postCategoryList = postCategoryRepository.findAllByType("recruits");
+            List<PopularCategoryResponse> popularCategoryResponseList = new ArrayList<>();
+            Map<String, Integer> map = new HashMap<>();
+            map.put("react", 0);
+            map.put("java", 0);
+            map.put("javascript", 0);
+            map.put("python", 0);
+            map.put("spring", 0);
+            map.put("springboot", 0);
+
+            for(PostCategory postCategory : postCategoryList){
+                if(postCategory.getReact() > 0){
+                    map.put("react", map.get("react") + 1);
+                }
+                if(postCategory.getJava() >0){
+                    map.put("java", map.get("java") + 1);
+                }
+                if(postCategory.getJavascript() >0){
+                    map.put("javascript", map.get("javascript") + 1);
+                }
+                if(postCategory.getPython() >0){
+                    map.put("python", map.get("python") + 1);
+                }
+                if(postCategory.getSpring() >0){
+                    map.put("spring", map.get("spring") + 1);
+                }
+                if(postCategory.getSpringboot() >0){
+                    map.put("springboot", map.get("springboot") + 1);
+                }
+            }
+            List<String> keySet = new ArrayList<>(map.keySet());
+            keySet.sort((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
+
+            int i=0;
+            for(String key : keySet){
+                if(i==3) break;
+                PopularCategoryResponse popularCategoryResponse = new PopularCategoryResponse();
+                popularCategoryResponse.setImg("");
+                popularCategoryResponse.setCategory_name(key);
+                popularCategoryResponseList.add(popularCategoryResponse);
+                i++;
+            }
+            return popularCategoryResponseList;
         }
 
     @Transactional

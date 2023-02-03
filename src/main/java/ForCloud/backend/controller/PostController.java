@@ -53,12 +53,11 @@ public class PostController {
         return new BaseResponse<>(postList);
     }
 
+    @GetMapping("/api/popularCategory")
+    public BaseResponse<List<PopularCategoryResponse>> getPopularCategoryList () {
+        List<PopularCategoryResponse> popularCategoryResponseList = postService.getPopularCategory();
 
-    @GetMapping("/api/temperature")
-    public BaseResponse<List<MemberTemperature>> getTemperatureList () {
-        List<MemberTemperature> memberTemperatureList = postService.getTemperature();
-
-        return new BaseResponse<>(memberTemperatureList);
+        return new BaseResponse<>(popularCategoryResponseList);
     }
 
     @GetMapping("/api/applicant/{postId}")
