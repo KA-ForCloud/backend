@@ -24,8 +24,10 @@ public class Participant {
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="chatting_id")
     private Chatting chatting;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name="post_id")

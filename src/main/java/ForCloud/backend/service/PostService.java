@@ -34,31 +34,44 @@ public class PostService {
         private final ParticipantRepository participantRepository;
 
         public List<PostResponse> getAllPosts(){
-            List<Post> postList = postRepository.findAll();
-            List<PostResponse> postResponseList = postList.stream()
-                    .map(p -> new PostResponse(p))
-                    .collect(Collectors.toList());
-            return postResponseList;
+            try {
+                List<Post> postList = postRepository.findAll();
+                List<PostResponse> postResponseList = postList.stream()
+                        .map(p -> new PostResponse(p))
+                        .collect(Collectors.toList());
+                return postResponseList;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
         }
 
         public List<PostResponse> getMyPost(Long userId){
-            List<Post> postList = postRepository.findAllByUser_Id(userId);
-            List<PostResponse> postResponseList = postList.stream()
-                    .map(p -> new PostResponse(p))
-                    .collect(Collectors.toList());
-            return postResponseList;
+            try {
+                List<Post> postList = postRepository.findAllByUser_Id(userId);
+                List<PostResponse> postResponseList = postList.stream()
+                        .map(p -> new PostResponse(p))
+                        .collect(Collectors.toList());
+                return postResponseList;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
         }
 
         public List<PostResponse> getMyRequestedPost(Long userId){
-            List<Applicant> applicantList = applicantRepository.findAllByUser_id(userId);
-            List<PostResponse> postResponseList = new ArrayList<>();
-            for(Applicant applicant : applicantList){
-                postResponseList.add(new PostResponse(applicant.getPost()));
+            try {
+                List<Applicant> applicantList = applicantRepository.findAllByUser_id(userId);
+                List<PostResponse> postResponseList = new ArrayList<>();
+                for (Applicant applicant : applicantList) {
+                    postResponseList.add(new PostResponse(applicant.getPost()));
+                }
+                return postResponseList;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
             }
-            return postResponseList;
         }
 
     public List<GetProjectListResponse> getMyProject(Long userId){
+            try{
         List<Participant> participantList = participantRepository.findAllByUser_Id(userId);
         List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
         for(Participant participant : participantList){
@@ -80,115 +93,143 @@ public class PostService {
 
         }
         return getProjectListResponseList;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
     }
 
         public List<ApplicantResponse> getApplicant (Long postId){
-            List<Applicant> applicant = applicantRepository.findAllByPost_id(postId);
+            try {
+                List<Applicant> applicant = applicantRepository.findAllByPost_id(postId);
 
-            List<ApplicantResponse> applicantResponses = applicant.stream()
-                    .map(p -> new ApplicantResponse(p))
-                    .collect(Collectors.toList());
+                List<ApplicantResponse> applicantResponses = applicant.stream()
+                        .map(p -> new ApplicantResponse(p))
+                        .collect(Collectors.toList());
 
-            return applicantResponses;
+                return applicantResponses;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
         }
 
         public PostCategoryResponse getCurrentCategory (Long postId){
-            PostCategory postCategory = postCategoryRepository.findById(postId, "current").get();
-            PostCategoryResponse postCategoryResponse = new PostCategoryResponse(postCategory);
-            return postCategoryResponse;
+            try {
+                PostCategory postCategory = postCategoryRepository.findById(postId, "current").get();
+                PostCategoryResponse postCategoryResponse = new PostCategoryResponse(postCategory);
+                return postCategoryResponse;
+            } catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
         }
 
         public List<PopularCategoryResponse> getPopularCategory (){
-            List<PostCategory> postCategoryList = postCategoryRepository.findAllByType("recruits");
-            List<PopularCategoryResponse> popularCategoryResponseList = new ArrayList<>();
-            Map<String, Integer> map = new HashMap<>();
-            map.put("react", 0);
-            map.put("java", 0);
-            map.put("javascript", 0);
-            map.put("python", 0);
-            map.put("spring", 0);
-            map.put("springboot", 0);
+            try {
+                List<PostCategory> postCategoryList = postCategoryRepository.findAllByType("recruits");
+                List<PopularCategoryResponse> popularCategoryResponseList = new ArrayList<>();
+                Map<String, Integer> map = new HashMap<>();
+                map.put("react", 0);
+                map.put("java", 0);
+                map.put("javascript", 0);
+                map.put("python", 0);
+                map.put("spring", 0);
+                map.put("springboot", 0);
 
-            for(PostCategory postCategory : postCategoryList){
-                if(postCategory.getReact() > 0){
-                    map.put("react", map.get("react") + 1);
+                for (PostCategory postCategory : postCategoryList) {
+                    if (postCategory.getReact() > 0) {
+                        map.put("react", map.get("react") + 1);
+                    }
+                    if (postCategory.getJava() > 0) {
+                        map.put("java", map.get("java") + 1);
+                    }
+                    if (postCategory.getJavascript() > 0) {
+                        map.put("javascript", map.get("javascript") + 1);
+                    }
+                    if (postCategory.getPython() > 0) {
+                        map.put("python", map.get("python") + 1);
+                    }
+                    if (postCategory.getSpring() > 0) {
+                        map.put("spring", map.get("spring") + 1);
+                    }
+                    if (postCategory.getSpringboot() > 0) {
+                        map.put("springboot", map.get("springboot") + 1);
+                    }
                 }
-                if(postCategory.getJava() >0){
-                    map.put("java", map.get("java") + 1);
-                }
-                if(postCategory.getJavascript() >0){
-                    map.put("javascript", map.get("javascript") + 1);
-                }
-                if(postCategory.getPython() >0){
-                    map.put("python", map.get("python") + 1);
-                }
-                if(postCategory.getSpring() >0){
-                    map.put("spring", map.get("spring") + 1);
-                }
-                if(postCategory.getSpringboot() >0){
-                    map.put("springboot", map.get("springboot") + 1);
-                }
-            }
-            List<String> keySet = new ArrayList<>(map.keySet());
-            keySet.sort((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
+                List<String> keySet = new ArrayList<>(map.keySet());
+                keySet.sort((o1, o2) -> map.get(o2).compareTo(map.get(o1)));
 
-            int i=0;
-            for(String key : keySet){
-                if(i==3) break;
-                PopularCategoryResponse popularCategoryResponse = new PopularCategoryResponse();
-                popularCategoryResponse.setImg("");
-                popularCategoryResponse.setCategory_name(key);
-                popularCategoryResponseList.add(popularCategoryResponse);
-                i++;
+                int i = 0;
+                for (String key : keySet) {
+                    if (i == 3) break;
+                    PopularCategoryResponse popularCategoryResponse = new PopularCategoryResponse();
+                    popularCategoryResponse.setImg("");
+                    popularCategoryResponse.setCategory_name(key);
+                    popularCategoryResponseList.add(popularCategoryResponse);
+                    i++;
+                }
+                return popularCategoryResponseList;
             }
-            return popularCategoryResponseList;
+            catch (NoSuchElementException e ){
+                throw new NoSuchElementException();
+            }
         }
 
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
-            Applicant applicant = new Applicant();
-            User user = userRepository.findById(request.getUserId()).get();
-            Post post = postRepository.findById(request.getPostId()).get();
-            applicant.setPost(post);
-            applicant.setUser(user);
-            applicant.setRequest(request.getRequest());
-            return new RequestApplicant(applicantRepository.save(applicant));
+                Applicant applicant = new Applicant();
+                User user = userRepository.findById(request.getUserId()).get();
+                Post post = postRepository.findById(request.getPostId()).get();
+                applicant.setPost(post);
+                applicant.setUser(user);
+                applicant.setRequest(request.getRequest());
+                return new RequestApplicant(applicantRepository.save(applicant));
     }
 
     @Transactional
     public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
-        Participant participant = new Participant();
-        User user = userRepository.findById(requestParticipant.getUserId()).get();
-        Post post = postRepository.findById(requestParticipant.getPostId()).get();
+                Participant participant = new Participant();
+                User user = userRepository.findById(requestParticipant.getUserId()).get();
+                Post post = postRepository.findById(requestParticipant.getPostId()).get();
 
-        participant.setPost(post);
-        participant.setUser(user);
-        participant.setType(ParticipantType.팀원);
-        return new RequestParticipant(participantRepository.save(participant));
+                participant.setPost(post);
+                participant.setUser(user);
+                participant.setType(ParticipantType.팀원);
+                return new RequestParticipant(participantRepository.save(participant));
     }
 
     @Transactional
     public DeleteApplicant deleteApplicant (Long postId, Long userId){
-            Applicant applicant = applicantRepository.findByPost_UserId(postId, userId).get();
-            applicantRepository.delete(applicant);
+            try {
+                Applicant applicant = applicantRepository.findByPost_UserId(postId, userId).get();
+                applicantRepository.delete(applicant);
 
-            return new DeleteApplicant(postId, userId);
+                return new DeleteApplicant(postId, userId);
+            }catch (Exception e){
+                throw new IllegalStateException();
+            }
     }
 
     @Transactional
     public DeletePost deletePost (Long postId, Long userId){
-        Post post = postRepository.findByIdAndUser_Id(postId, userId).get();
-        postRepository.delete(post);
+            try {
+                Post post = postRepository.findByIdAndUser_Id(postId, userId).get();
+                postRepository.delete(post);
 
-        return new DeletePost(postId, userId);
+                return new DeletePost(postId, userId);
+            }catch (Exception e){
+                throw new IllegalStateException();
+            }
     }
 
     @Transactional
     public Post addView(Long postId){
-            Post post = postRepository.findById(postId).get();
-            post.setViews(post.getViews()+1);
+            try {
+                Post post = postRepository.findById(postId).get();
+                post.setViews(post.getViews() + 1);
 
-            return post;
+                return post;
+            }catch (Exception e){
+                throw new IllegalStateException();
+            }
     }
 
     @Transactional

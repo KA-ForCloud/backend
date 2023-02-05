@@ -30,9 +30,11 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
 
     List<Participant> findAllByUser_Id(Long memberId);
     List<Participant> findAllByChatting_Id(Long chattingId);
+    @Query("select p from Participant p where p.user.id = ?1 and p.chatting.id =?2")
     Participant findByUser_IdAndChatting_Id(Long memberId,Long chattingId);
 
-
+    @Query("select p from Participant p where p.post.id = ?1 and p.user.id =?2")
+    Optional<Participant> findByPost_User_Id(Long postId, Long UserId);
 
 
 }
