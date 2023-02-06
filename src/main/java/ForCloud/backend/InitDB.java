@@ -67,8 +67,8 @@ public class InitDB {
             Applicant applicant1 = createApplicant(user2, post1, "react");
             em.persist(applicant1);
 
-            Applicant applicant2 = createApplicant(user3, post1, "springboot");
-            em.persist(applicant2);
+//            Applicant applicant2 = createApplicant(user3, post1, "springboot");
+//            em.persist(applicant2);
 
             Applicant applicant3 = createApplicant(user4, post1, "springboot");
             em.persist(applicant3);
@@ -141,7 +141,6 @@ public class InitDB {
         private Participant createParticipant(User user, Post post, Chatting chatting, String category){
             Participant participant = new Participant();
             participant.setPost(post);
-            participant.setCategory(category);
             participant.setChatting(chatting);
             participant.setUser(user);
             return participant;

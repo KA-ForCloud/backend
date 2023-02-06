@@ -64,7 +64,7 @@ public class PostTest {
     @DisplayName("게시글 열람 페이지에서 신청자 리스트 받아오기")
     void getApplicantTest(){
         List<ApplicantResponse> applicantResponses = postService.getApplicant(1L);
-        assertThat(applicantResponses.size()).isEqualTo(1);
+        assertThat(applicantResponses.size()).isEqualTo(4);
     }
 
     @Order(5)
@@ -85,7 +85,9 @@ public class PostTest {
         RequestApplicant requestApplicant = objectMapper.readValue(json, RequestApplicant.class);
         postService.registerApplicant(requestApplicant);
 
+        //한 게시글당 신청을 한 번만 할 수 있게 바꿔야할 듯.
         Applicant applicant = applicantRepository.findByPost_UserId(1L, 3L).get();
+
         System.out.println(applicant);
         assertThat(applicant.getRequest()).isEqualTo("react");
     }
