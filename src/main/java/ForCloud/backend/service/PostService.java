@@ -81,7 +81,7 @@ public class PostService {
             GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
             getProjectListResponse.setId(participant.getPost().getId());
             getProjectListResponse.setContents(participant.getPost().getContents());
-            getProjectListResponse.setName(participant.getUser().getUser_name());
+            getProjectListResponse.setName(participant.getPost().getUser().getUser_name());
             getProjectListResponse.setDuration(participant.getPost().getDuration());
             getProjectListResponse.setPost_category(participant.getPost().getPost_category());
             getProjectListResponse.setPost_name(participant.getPost().getPost_name());
@@ -177,19 +177,24 @@ public class PostService {
 
     @Transactional
     public RequestApplicant registerApplicant(RequestApplicant request){
-                Applicant applicant = new Applicant();
-                User user = userRepository.findById(request.getUserId()).get();
-                Post post = postRepository.findById(request.getPostId()).get();
-                applicant.setPost(post);
-                applicant.setUser(user);
-                applicant.setRequest(request.getRequest());
-                return new RequestApplicant(applicantRepository.save(applicant));
+                if(applicantRepository.findByPost_UserId(request.getPostId(), request.getUserId()).isPresent()){
+                    //예외처리 코드짜기
+                    System.out.println("이미 신청한 기록이 있습니다");
+                    return null;
+                }else {
+                    Applicant applicant = new Applicant();
+                    User user = userRepository.findById(request.getUserId()).get();
+                    Post post = postRepository.findById(request.getPostId()).get();
+                    applicant.setPost(post);
+                    applicant.setUser(user);
+                    applicant.setRequest(request.getRequest());
+                    return new RequestApplicant(applicantRepository.save(applicant));
+                }
     }
 
     @Transactional
     public PostParticipantResponse registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
-
         User user = userRepository.findById(requestParticipant.getUserId()).get();
         Post post = postRepository.findById(requestParticipant.getPostId()).get();
         Chatting chatting=chattingRepository.findByPostId(post.getId());
