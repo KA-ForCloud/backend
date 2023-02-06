@@ -14,11 +14,9 @@ public class RequestParticipant {
     private Long postId;
     private Long userId;
 
-    private String request;
 
     public RequestParticipant(Participant participant){
         this.postId = participant.getPost().getId();
         this.userId = participant.getUser().getId();
-        this.request = participant.getCategory();
     }
 }

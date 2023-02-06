@@ -37,6 +37,5 @@ public class Participant {
     private ParticipantType type;
 
     private Long last;
-    private String category;
 
 }

@@ -187,7 +187,6 @@ public class PostService {
     }
 
     @Transactional
-
     public PostParticipantResponse registerParticipant(RequestParticipant requestParticipant){
         Participant participant = new Participant();
 
@@ -197,14 +196,11 @@ public class PostService {
 
         participant.setPost(post);
         participant.setUser(user);
-
-        participant.setProjectType(ProjectType.onGoing);
         participant.setChatting(chatting);
         participant.setType(ParticipantType.팀원);
         participant.setLast(0L);
-        participant.setCategory(requestParticipant.getCategory());
         participantRepository.save(participant);
-        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),user.getUser_name(),chatting.getId());
+        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),chatting.getId());
 
         return response;
     }
