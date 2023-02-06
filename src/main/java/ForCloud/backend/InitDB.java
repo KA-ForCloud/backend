@@ -1,7 +1,6 @@
 package ForCloud.backend;
 
 import ForCloud.backend.entity.*;
-import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
 import lombok.RequiredArgsConstructor;
@@ -41,25 +40,47 @@ public class InitDB {
             User user5 = createMember("e@gmail.com","eee",36.9);
             em.persist(user5);
 
-            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", 3L, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
+            Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
             em.persist(post1);
 
-            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", 2L, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
+            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
             em.persist(post2);
 
-            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", 4L, "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
             em.persist(post3);
 
-            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", 3L, "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
             em.persist(post5);
 
-            Applicant applicant = createApplicant(user2, post1, "react");
-            em.persist(applicant);
+            Chatting chatting1 = createChatting(1L, "채팅방1", "abcd", ProjectType.onGoing);
+            em.persist(chatting1);
 
-            Participant participant1 = createParticipant(user1, post3, "react", ParticipantType.팀장);
+            Chatting chatting2 = createChatting(2L, "채팅방2", "abcde", ProjectType.onGoing);
+            em.persist(chatting2);
+
+            Chatting chatting3 = createChatting(3L, "채팅방3", "abcdf", ProjectType.completed);
+            em.persist(chatting3);
+
+            Chatting chatting4 = createChatting(4L, "채팅방4", "abcdg", ProjectType.completed);
+            em.persist(chatting4);
+
+            Applicant applicant1 = createApplicant(user2, post1, "react");
+            em.persist(applicant1);
+
+            Applicant applicant2 = createApplicant(user3, post1, "springboot");
+            em.persist(applicant2);
+
+            Applicant applicant3 = createApplicant(user4, post1, "springboot");
+            em.persist(applicant3);
+
+            Participant participant1 = createParticipant(user1, post3, chatting3, "react");
             em.persist(participant1);
 
-            Participant participant3 = createParticipant(user2, post5, "springboot",ParticipantType.팀장);
+            Participant participant2 = createParticipant(user1, post5, chatting4,"springboot");
+            em.persist(participant2);
+
+            Participant participant3 = createParticipant(user2, post5,chatting4, "springboot");
+
             em.persist(participant3);
 
             PostCategory post_category1 = createPost_category(post1, "recruits",2L,0L,0L,2L,0L,0L);
@@ -88,45 +109,46 @@ public class InitDB {
         }
 
         private User createMember(String email, String username, double temperature){
-           User user =new User();
-           user.setUser_email(email);
-           user.setUser_name(username);
-           user.setTemperature(temperature);
-           return user;
-       }
+            User user =new User();
+            user.setUser_email(email);
+            user.setUser_name(username);
+            user.setTemperature(temperature);
+            return user;
+        }
 
-       private Post createPost(User user, String title, String date, String period, Long duration, String contents, PostType type, Long view){
-           Post post = new Post();
-           post.setUser(user);
-           post.setPost_name(title);
-           post.setStart_time(date);
-           post.setEnd_time(period);
-           post.setDuration(duration);
-           post.setContents(contents);
-           post.setPostType(type);
-           post.setViews(view);
-           return post;
-       }
+        private Post createPost(User user, String title, String date, String period, String duration, String contents, PostType type, Long view){
+            Post post = new Post();
+            post.setUser(user);
+            post.setPost_name(title);
+            post.setStart_time(date);
+            post.setEnd_time(period);
+            post.setDuration(Long.valueOf(duration));
+            post.setContents(contents);
+            post.setPostType(type);
+            post.setViews(view);
+            return post;
+        }
 
-       private Applicant createApplicant(User user, Post post, String requested){
+        private Applicant createApplicant(User user, Post post, String requested) {
             Applicant applicant = new Applicant();
             applicant.setRequest(requested);
             applicant.setPost(post);
             applicant.setUser(user);
             return applicant;
-       }
 
-        private Participant createParticipant(User user, Post post, String category, ParticipantType participantType){
+        }
+
+        private Participant createParticipant(User user, Post post, Chatting chatting, String category){
             Participant participant = new Participant();
             participant.setPost(post);
             participant.setCategory(category);
+            participant.setChatting(chatting);
             participant.setUser(user);
-            participant.setType(participantType);
             return participant;
         }
 
-       private PostCategory createPost_category(Post post, String type, Long react, Long javascript, Long spring
-       , Long springboot, Long python, Long java){
+        private PostCategory createPost_category(Post post, String type, Long react, Long javascript, Long spring
+                , Long springboot, Long python, Long java){
             PostCategory post_category = new PostCategory();
             post_category.setPost(post);
             post_category.setType(type);
@@ -137,6 +159,15 @@ public class InitDB {
             post_category.setSpringboot(springboot);
             post_category.setSpring(spring);
             return post_category;
-       }
+
+        }
+        private Chatting createChatting(Long postId, String title, String filePath, ProjectType projectType){
+            Chatting chatting = new Chatting();
+            chatting.setPostId(postId);
+            chatting.setTitle(title);
+            chatting.setFilePath(filePath);
+            chatting.setProjectType(projectType);
+            return chatting;
+        }
     }
 }

@@ -18,20 +18,22 @@ import java.util.stream.Collectors;
 public class PostService {
 
         @Autowired
-        public PostService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository,ParticipantRepository participantRepository) {
+        public PostService(UserRepository userRepository, PostRepository postRepository, PostCategoryRepository postCategoryRepository, ApplicantRepository applicantRepository, ParticipantRepository participantRepository, ChattingRepository chattingRepository) {
 
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.postCategoryRepository = postCategoryRepository;
         this.applicantRepository = applicantRepository;
         this.participantRepository = participantRepository;
-    }
+            this.chattingRepository = chattingRepository;
+        }
         private final PostRepository postRepository;
         private final ApplicantRepository applicantRepository;
         private final PostCategoryRepository postCategoryRepository;
         private final UserRepository userRepository;
 
         private final ParticipantRepository participantRepository;
+        private final ChattingRepository chattingRepository;
 
         public List<PostResponse> getAllPosts(){
             try {
@@ -185,15 +187,26 @@ public class PostService {
     }
 
     @Transactional
-    public RequestParticipant registerParticipant(RequestParticipant requestParticipant){
-                Participant participant = new Participant();
-                User user = userRepository.findById(requestParticipant.getUserId()).get();
-                Post post = postRepository.findById(requestParticipant.getPostId()).get();
 
-                participant.setPost(post);
-                participant.setUser(user);
-                participant.setType(ParticipantType.팀원);
-                return new RequestParticipant(participantRepository.save(participant));
+    public PostParticipantResponse registerParticipant(RequestParticipant requestParticipant){
+        Participant participant = new Participant();
+
+        User user = userRepository.findById(requestParticipant.getUserId()).get();
+        Post post = postRepository.findById(requestParticipant.getPostId()).get();
+        Chatting chatting=chattingRepository.findByPostId(post.getId());
+
+        participant.setPost(post);
+        participant.setUser(user);
+
+        participant.setProjectType(ProjectType.onGoing);
+        participant.setChatting(chatting);
+        participant.setType(ParticipantType.팀원);
+        participant.setLast(0L);
+        participant.setCategory(requestParticipant.getCategory());
+        participantRepository.save(participant);
+        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),user.getUser_name(),chatting.getId());
+
+        return response;
     }
 
     @Transactional
