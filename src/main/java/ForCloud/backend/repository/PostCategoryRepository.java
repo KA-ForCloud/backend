@@ -19,4 +19,5 @@ public interface PostCategoryRepository extends JpaRepository<PostCategory, Long
 
     @Query("select p from PostCategory p where p.post.id = ?1 and p.type = ?2")
     Optional<PostCategory> findById(Long postId, String type);
+
 }
