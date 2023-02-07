@@ -77,7 +77,6 @@ public class PostService {
         List<Participant> participantList = participantRepository.findAllByUser_Id(userId);
         List<GetProjectListResponse> getProjectListResponseList = new ArrayList<>();
         for(Participant participant : participantList){
-            // 채팅 Entity에 type이 생기면 변경할 예정
             GetProjectListResponse getProjectListResponse = new GetProjectListResponse();
             getProjectListResponse.setId(participant.getPost().getId());
             getProjectListResponse.setContents(participant.getPost().getContents());
@@ -92,7 +91,6 @@ public class PostService {
             getProjectListResponse.setProjectType(participant.getChatting().getProjectType());
 
             getProjectListResponseList.add(getProjectListResponse);
-
         }
         return getProjectListResponseList;
             } catch (NoSuchElementException e ){
