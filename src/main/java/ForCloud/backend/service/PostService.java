@@ -205,7 +205,7 @@ public class PostService {
         participant.setType(ParticipantType.팀원);
         participant.setLast(0L);
         participantRepository.save(participant);
-        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),chatting.getId());
+        PostParticipantResponse response=new PostParticipantResponse(user.getId(),post.getId(),chatting.getId(),user.getUser_name());
 
         return response;
     }
