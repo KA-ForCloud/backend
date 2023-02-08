@@ -1,13 +1,15 @@
+server:
+  port: 8080
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/teamchat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://210.109.62.195:3306/teamchat?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
-    password: 12345
+    password: qwer1234!
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
@@ -19,5 +21,3 @@ spring:
     multipart:
       maxFileSize: 1000MB
       maxRequestSize: 1000MB
-server:
-  port: 8080
