@@ -43,13 +43,13 @@ public class InitDB {
             Post post1 = createPost(user1, "제목1" ,"2023-01-11","2023-01-16", "3", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", PostType.recruiting, 20L);
             em.persist(post1);
 
-            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 30L);
+            Post post2 = createPost(user2, "제목2", "2023-01-13","2023-01-13", "2", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", PostType.recruiting, 3L);
             em.persist(post2);
 
-            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 40L);
+            Post post3 = createPost(user4, "제목3", "2023-01-14","2023-01-15", "4", "ccccccccccccccccccccccccccccccccccccc", PostType.completed, 5L);
             em.persist(post3);
 
-            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 60L);
+            Post post5 = createPost(user5, "제목5", "2023-01-14","2023-01-15", "4", "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", PostType.completed, 10L);
             em.persist(post5);
 
             Chatting chatting1 = createChatting(1L, "채팅방1", "abcd", ProjectType.onGoing);
@@ -64,14 +64,20 @@ public class InitDB {
             Chatting chatting4 = createChatting(4L, "채팅방4", "abcdg", ProjectType.completed);
             em.persist(chatting4);
 
-            Applicant applicant1 = createApplicant(user2, post1, "react");
+            Applicant applicant1 = createApplicant(user2, post1, "springboot");
             em.persist(applicant1);
 
-//            Applicant applicant2 = createApplicant(user3, post1, "springboot");
-//            em.persist(applicant2);
+            Applicant applicant2 = createApplicant(user1, post1, "springboot");
+            em.persist(applicant2);
 
             Applicant applicant3 = createApplicant(user4, post1, "springboot");
             em.persist(applicant3);
+
+            Applicant applicant4 = createApplicant(user5, post1, "react");
+            em.persist(applicant4);
+
+            Applicant applicant5 = createApplicant(user3, post1, "react");
+            em.persist(applicant5);
 
             Participant participant1 = createParticipant(user1, post3, chatting3, "react");
             em.persist(participant1);

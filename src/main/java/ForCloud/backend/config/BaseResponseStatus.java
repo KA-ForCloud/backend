@@ -29,7 +29,7 @@ public enum BaseResponseStatus {
     // post
     // 포스트 열람 페이지 - 신청하기 기능
     APPLICANT_EXIST(false, 2020, "이미 신청한 결과가 있습니다."),
-
+    PARTICIPANT_EXIST(false, 2021, "이미 참가한 결과가 있습니다."),
 
 
 

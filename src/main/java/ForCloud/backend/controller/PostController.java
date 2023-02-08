@@ -94,6 +94,12 @@ public class PostController {
         return new BaseResponse<>(deleteApplicant);
     }
 
+    @DeleteMapping("/api/allApplicant/{postId}/{category}")
+    public BaseResponse<?> deleteAllApplicant(@PathVariable(name ="postId")Long postId, @PathVariable(name = "category")String category){
+        String str = postService.deleteAllApplicant(postId, category);
+        return new BaseResponse<>(str);
+    }
+
     @DeleteMapping("/api/post/{postId}/{userId}")
     public BaseResponse<DeletePost> deletePost(@PathVariable(name="postId") Long postId, @PathVariable(name="userId") Long userId){
         DeletePost deletePost = postService.deletePost(postId, userId);
