@@ -26,16 +26,10 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_PASSWORD(false,2011,"유저 비밀번호 값을 확인해주세요"),
     USER_EMPTY(false,2012,"존재하지 않는 유저입니다."),
 
-    // 회원가입
-
     // post
-    // 게시글 삭제 - 설문지가 존재해서 게시글 삭제 불가
-    SURVEY_EXIST(false,2020,"설문지가 존재하여 게시글 삭제가 불가합니다. 설문지를 먼저 삭제해주세요."),
-    //게시글 삭제 - 설문지 삭제 시도 유저가 잘못됨.
-    DELETE_INVALID_USER(false,2021,"잘못된 유저가 게시글 삭제를 시도했습니다."),
-
-    //설문지 삭제 - 게시글이 존재해서 설문지 삭제 불가
-    POST_EXIST(false, 2022, "게시글이 존재하여 설문지 삭제가 불가합니다. 게시글을 먼저 삭제해주세요"),
+    // 포스트 열람 페이지 - 신청하기 기능
+    APPLICANT_EXIST(false, 2020, "이미 신청한 결과가 있습니다."),
+    PARTICIPANT_EXIST(false, 2021, "이미 참가한 결과가 있습니다."),
 
 
 
