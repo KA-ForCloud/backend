@@ -26,6 +26,11 @@ public class PostController {
     private final PostService postService;
     @Autowired
     DtoService dtoService;
+
+    @GetMapping("/")
+    public BaseResponse<String> test(){
+        return new BaseResponse<>("OK!");
+    }
     @GetMapping("/api/post")
     public BaseResponse<List<PostResponse>> getAllPosts() {
         log.info("health check");
@@ -39,7 +44,6 @@ public class PostController {
 
         return new BaseResponse<>(postList);
     }
-
 
 
     @GetMapping("/api/requestedPost/{userId}")
