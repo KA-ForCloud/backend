@@ -28,6 +28,7 @@ public class PostController {
     DtoService dtoService;
     @GetMapping("/api/post")
     public BaseResponse<List<PostResponse>> getAllPosts() {
+        log.info("health check");
         List<PostResponse> postResponseList = postService.getAllPosts();
         return new BaseResponse<>(postResponseList);
     }
