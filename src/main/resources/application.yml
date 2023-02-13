@@ -4,6 +4,7 @@ server:
     key-store: classpath:keystore.p12
     key-store-password: pwd12!@
     key-store-type: PKCS12
+    enabled: true
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
