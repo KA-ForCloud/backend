@@ -1,53 +1,130 @@
 pipeline {
     agent any
-    tools {
-        gradle 'gradle'
+
+    environment {
+        imagename = "lmslmsms0616/teamchat_back"
+        registryCredential = 'docker-hub'
+        dockerImage = ''
     }
+
     stages {
-        stage('Git Clone') {
-            steps {
-                git branch: 'main', url: 'https://github.com/KA-ForCloud/backend.git'
+        // git에서 repository clone
+        stage('Prepare') {
+          steps {
+            echo 'Clonning Repository'
+            git url: 'https://github.com/KA-ForCloud/backend.git',
+              branch: 'main',
+              credentialsId: 'github_cred'
             }
+            post {
+             success {
+               echo 'Successfully Cloned Repository'
+             }
+           	 failure {
+               error 'This pipeline stops here...'
+             }
+          }
         }
-        stage('BE-Build') {
-            steps {
-                    sh "./gradlew clean build --exclude-task test"
-                    slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "Backend Build Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+
+        // gradle build
+        stage('Bulid Gradle') {
+          agent any
+          steps {
+            echo 'Bulid Gradle'
+            dir ('.'){
+                sh """
+                ./gradlew clean build --exclude-task test
+                """
             }
+          }
+          post {
+            failure {
+              error 'This pipeline stops here...'
+            }
+          }
         }
-        stage('WAS_1_Deploy') {
-            steps {
-                echo "WAS_1_Deploy Start"
-                sshagent(credentials: ['kic_key']) {
-                    echo "sshagent start"
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 uptime
-                        scp -r -P 10003 /var/jenkins_home/workspace/forCloud_Backend_Pipeline/build/libs/backend-0.0.1-SNAPSHOT.jar centos@210.109.60.60:/home/centos/Backend
-                    '''
-                    
-                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10003 ./deploy.sh > /dev/null 2>&1 &'
-                    
-                    echo "Success"
-                    slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS1-Backend Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+
+        // docker build
+        stage('Bulid Docker') {
+          agent any
+          steps {
+            echo 'Bulid Docker'
+            script {
+                dockerImage = docker.build imagename
+            }
+          }
+          post {
+            failure {
+              error 'This pipeline stops here...'
+            }
+          }
+        }
+
+        // docker push
+        stage('Push Docker') {
+          agent any
+          steps {
+            echo 'Push Docker'
+            script {
+                docker.withRegistry( '', registryCredential) {
+                    dockerImage.push("${currentBuild.number}")  // ex) "1.0"
                 }
             }
+          }
+          post {
+            failure {
+              error 'This pipeline stops here...'
+            }
+          }
         }
-        stage('WAS_2_Deploy') {
-            steps {
-                echo "WAS_2_Deploy Start"
-                sshagent(credentials: ['kic_key']) {
-                    echo "sshagent start"
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 uptime
-                        scp -r -P 10004 /var/jenkins_home/workspace/forCloud_Backend_Pipeline/build/libs/backend-0.0.1-SNAPSHOT.jar centos@210.109.60.60:/home/centos/Backend
-                    '''
-                    
-                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10004 ./deploy.sh > /dev/null 2>&1 &'
-                    
-                    echo "Success"
-                    slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS2-Backend Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        stage('Remove image in Jenkins'){
+           steps{
+               sh "docker rmi lmslmsms0616/teamchat_back:${currentBuild.number}"
+           }
+        }
+        stage('Deploy to dev') {
+                  steps {
+                        sshagent(credentials: ['kic_key']) {
+                            echo "sshagent start"
+
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 uptime"
+                            echo "uptime end"
+                            // sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'sudo chmod 666 /var/run/docker.sock'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker stop back | true'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker rm back | true'"
+                            echo "docker remove"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker rmi -f lmslmsms0616/teamchat_back:latest | true'"
+                            echo "docker remove image"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker run -d --name back -p 80:8080 -p 443:8080 -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
+                            echo "docker run"
+
+                            slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS-1-BACKEND Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                            echo "WAS_1_Success"
+
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 uptime"
+                            echo "uptime end"
+                            // sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'sudo chmod 666 /var/run/docker.sock'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker stop back | true'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker rm back | true'"
+                            echo "docker remove"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker rmi -f lmslmsms0616/teamchat_back:latest | true'"
+                            echo "docker remove image"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker run -d --name back -p 80:8080 -p 443:8080 -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
+                            echo "docker run"
+
+                            slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS-2-BACKEND Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+                            echo "WAS_2_Success"
+                        }
+                    }
+
+                   post {
+                            failure {
+                              echo 'Update 실패ㅠㅠ'
+                            }
+                            success {
+                              echo 'Update 성공!!!! test'
+                            }
+                    }
                 }
             }
-        }
-    }
 }
