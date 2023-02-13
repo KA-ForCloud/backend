@@ -95,7 +95,7 @@ pipeline {
                             echo "docker remove"
                             sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker rmi -f lmslmsms0616/teamchat_back:latest | true'"
                             echo "docker remove image"
-                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker run -d --name back -p 80:8080 -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10003 'docker run -d --name back -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
                             echo "docker run"
 
                             slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS-1-BACKEND Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -109,7 +109,7 @@ pipeline {
                             echo "docker remove"
                             sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker rmi -f lmslmsms0616/teamchat_back:latest | true'"
                             echo "docker remove image"
-                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker run -d --name back -p 80:8080 -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
+                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.60.60 -p 10004 'docker run -d --name back -p 8080:8080 lmslmsms0616/teamchat_back:${currentBuild.number}'"
                             echo "docker run"
 
                             slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS-2-BACKEND Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
