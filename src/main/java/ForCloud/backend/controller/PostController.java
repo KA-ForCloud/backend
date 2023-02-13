@@ -29,6 +29,7 @@ public class PostController {
 
     @GetMapping("/")
     public BaseResponse<String> test(){
+        log.info("TEST OK!");
         return new BaseResponse<>("OK!");
     }
     @GetMapping("/api/post")
