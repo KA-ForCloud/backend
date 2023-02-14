@@ -7,6 +7,7 @@ import ForCloud.backend.service.KakaoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,10 @@ public class UserController {
 
     @PostMapping("/api/user/port/save/{user_id}")
     public User savePort(@PathVariable Long user_id, @RequestBody String userDto) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         System.out.println(userDto);
+        userDto = mapper.readValue(userDto, userDto.class);
+        
         return dtoService.updatePort(user_id, userDto, userDto.getPort_name());
     }
 
