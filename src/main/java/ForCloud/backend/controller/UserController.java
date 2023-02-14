@@ -49,12 +49,12 @@ public class UserController {
 
 
     @PostMapping("/api/user/port/save/{user_id}")
-    public User savePort(@PathVariable Long user_id, @RequestBody UserDto userDto, @RequestParam String portname) throws JsonProcessingException {
+    public User savePort(@PathVariable Long user_id, @RequestBody UserDto userDto) throws JsonProcessingException {
 
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(userDto);
         System.out.println(jsonInString);
-        return dtoService.updatePort(user_id, userDto,portname);
+        return dtoService.updatePort(user_id, userDto, userDto.getPort_name());
     }
 
 
