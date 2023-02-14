@@ -53,7 +53,7 @@ public class UserController {
     public User savePort(@PathVariable Long user_id, @RequestBody String userDto) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         System.out.println(userDto);
-        userDto = mapper.readValue(userDto, userDto.class);
+        userDto = mapper.readValue(userDto, UserDto.class);
         
         return dtoService.updatePort(user_id, userDto, userDto.getPort_name());
     }
