@@ -27,7 +27,7 @@ public class UserDto {
 //
 //    private String user_image;
     private String tech;
-
+    private String port_name;
 //    private String port;
 
     private UserCategoryDto userCategoryDto;
@@ -40,8 +40,12 @@ public class UserDto {
 //        this.user_token=user.getUser_token();
         this.school = user.getSchool();
         this.tech = user.getTech();
+        this.port_name = user.getPort();
 //        this.port = user.getPort();
 //        this.user_image = user.getUser_image();
+    }
+    public void setPort(String port){
+        this.port_name = port;
     }
 
 }
