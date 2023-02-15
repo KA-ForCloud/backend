@@ -77,7 +77,7 @@ public class DtoService {
         }
     }
 
-    public User storeFile(MultipartFile multipartFile, Long user_id) throws IOException {
+    public User storeFile(File multipartFile, Long user_id) throws IOException {
         System.out.println(multipartFile);
 
         String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt()); // 현재 날짜와 랜덤 정수값으로 새로운 파일명 만들기
