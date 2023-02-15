@@ -62,7 +62,6 @@ public class UserController {
 
     @PostMapping("/api/user/upload/{user_id}")
     public User uploadFile(@RequestBody File multipartFile, @PathVariable Long user_id) throws IOException {
-        multipartFile.isEmpty();/* 파일을 업로드 하지 않았을 경우 처리 */
         return dtoService.storeFile(multipartFile,user_id);
     }
 
