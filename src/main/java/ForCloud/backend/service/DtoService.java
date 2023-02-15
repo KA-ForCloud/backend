@@ -77,7 +77,14 @@ public class DtoService {
         }
     }
 
-    public User storeFile(File multipartFile, Long user_id) throws IOException {
+    public User storeFile(File file, Long user_id) throws IOException {
+        FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length() , file.getParentFile());
+
+        InputStream input = new FileInputStream(file);
+        OutputStream os = fileItem.getOutputStream();
+        IOUtils.copy(input,os);
+
+        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
         System.out.println(multipartFile);
 
         String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt()); // 현재 날짜와 랜덤 정수값으로 새로운 파일명 만들기
@@ -86,7 +93,7 @@ public class DtoService {
         originName = originName.substring(0, originName.lastIndexOf(".")); // ex) 파일
         long fileSize = multipartFile.getSize(); // 파일 사이즈
 
-        File fileSave = new File("/home/centos/fileshare/portfolio", fileId + "." + fileExtension); // ex) fileId.jpg
+        File fileSave = new File("/Users/bagchanbin/upload", fileId + "." + fileExtension); // ex) fileId.jpg
         if(!fileSave.exists()) { // 폴더가 없을 경우 폴더 만들기
             fileSave.mkdirs();
         }
