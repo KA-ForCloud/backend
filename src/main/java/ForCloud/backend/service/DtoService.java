@@ -10,6 +10,9 @@ import ForCloud.backend.repository.*;
 import ForCloud.backend.type.ParticipantType;
 import ForCloud.backend.type.PostType;
 import ForCloud.backend.type.ProjectType;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -18,11 +21,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
-import java.io.IOException;
 import java.util.Date;
 import java.util.NoSuchElementException;
 import java.util.Optional;
