@@ -97,7 +97,7 @@ public class DtoService {
         originName = originName.substring(0, originName.lastIndexOf(".")); // ex) 파일
         long fileSize = multipartFile.getSize(); // 파일 사이즈
 
-        File fileSave = new File("/Users/bagchanbin/upload", fileId + "." + fileExtension); // ex) fileId.jpg
+        File fileSave = new File("/home/centos/fileshare/portfolio", fileId + "." + fileExtension); // ex) fileId.jpg
         if(!fileSave.exists()) { // 폴더가 없을 경우 폴더 만들기
             fileSave.mkdirs();
         }
