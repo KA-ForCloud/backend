@@ -81,14 +81,12 @@ public class DtoService {
         }
     }
 
-    public User storeFile(File file, Long user_id) throws IOException {
-        FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length() , file.getParentFile());
+    public User storeFile(MulipartFile multipartfile, Long user_id) throws IOException {
+//         FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length() , file.getParentFile());
 
-        InputStream input = new FileInputStream(file);
-        OutputStream os = fileItem.getOutputStream();
-        IOUtils.copy(input,os);
-
-        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+//         InputStream input = new FileInputStream(file);
+//         OutputStream os = fileItem.getOutputStream();
+//         IOUtils.copy(input,os);
         System.out.println(multipartFile);
 
         String fileId = (new Date().getTime()) + "" + (new Random().ints(1000, 9999).findAny().getAsInt()); // 현재 날짜와 랜덤 정수값으로 새로운 파일명 만들기
