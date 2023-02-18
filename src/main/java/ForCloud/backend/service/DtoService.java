@@ -81,7 +81,7 @@ public class DtoService {
         }
     }
 
-    public User storeFile(MulipartFile multipartfile, Long user_id) throws IOException {
+    public User storeFile(MultipartFile multipartFile, Long user_id) throws IOException {
 //         FileItem fileItem = new DiskFileItem("file", Files.probeContentType(file.toPath()), false, file.getName(), (int) file.length() , file.getParentFile());
 
 //         InputStream input = new FileInputStream(file);

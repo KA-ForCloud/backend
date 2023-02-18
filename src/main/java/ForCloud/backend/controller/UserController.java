@@ -61,7 +61,7 @@ public class UserController {
 
 
     @PostMapping("/api/user/upload/{user_id}")
-    public User uploadFile(File multipartFile, @PathVariable Long user_id) throws IOException {
+    public User uploadFile(MultipartFile multipartFile, @PathVariable Long user_id) throws IOException {
         return dtoService.storeFile(multipartFile,user_id);
     }
 
