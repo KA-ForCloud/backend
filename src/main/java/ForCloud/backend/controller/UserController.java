@@ -26,6 +26,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @ResponseBody
+@Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
@@ -44,7 +45,7 @@ public class UserController {
 
     @PostMapping("/api/user/register/{token}")
     public User registerUser(@PathVariable String token) {
-        log.Info("### 사용자 로그인: {}", token);
+        log.info("### 사용자 로그인: {}", token);
         return kakaoService.getInfoByKakaoToken(token);
     }
 
