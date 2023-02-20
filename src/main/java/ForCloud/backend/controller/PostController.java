@@ -133,9 +133,7 @@ public class PostController {
 
     @PostMapping("/api/post/save/{user_id}")
     public BaseResponse<Long> savePost(@PathVariable Long user_id, @RequestBody PostDto postDto) throws JsonProcessingException {
-//        System.out.println(user_id);
         log.info("save post");
-        user_id=1L;
         ObjectMapper mapper = new ObjectMapper();
         String jsonInString = mapper.writeValueAsString(postDto);
         System.out.println(postDto);
