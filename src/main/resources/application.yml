@@ -26,4 +26,3 @@ spring:
     multipart:
       maxFileSize: 1000MB
       maxRequestSize: 1000MB
-logging.config: classpath:logback.xml
