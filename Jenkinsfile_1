@@ -87,7 +87,7 @@ pipeline {
                         sshagent(credentials: ['kic_key']) {
                             echo "sshagent start"
                             
-                            sh "ssh -o StrictHostKeyChecking=no centos@210.109.61.15 uptime"
+                            // sh "ssh -o StrictHostKeyChecking=no centos@210.109.61.15 uptime"
                             echo "uptime end"
                             sh "ssh -o StrictHostKeyChecking=no centos@210.109.61.15 'sudo chmod 666 /var/run/docker.sock'"
                             sh "ssh -o StrictHostKeyChecking=no centos@210.109.61.15 'docker stop back | true'"
