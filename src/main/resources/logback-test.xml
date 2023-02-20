@@ -9,6 +9,5 @@
         <level value="INFO">
         </level>
         <appender-ref ref="LOGSTASH"></appender-ref>
-        <appender-ref ref="STASH"></appender-ref>
     </root>
 </configuration>
