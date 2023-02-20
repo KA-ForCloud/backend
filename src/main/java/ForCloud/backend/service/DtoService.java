@@ -124,6 +124,7 @@ public class DtoService {
             }
             post.setByDto(postDto);
             User user = userRepository.findById(user_id).get();
+            System.out.println("user_id"+user_id+"  user"+user);
             post.setUser(user);
             post.setPostType(PostType.recruiting);
             postRepository.save(post);
