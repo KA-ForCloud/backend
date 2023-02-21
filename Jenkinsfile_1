@@ -25,7 +25,7 @@ pipeline {
                         scp -r -P 10003  /var/jenkins_home/workspace/forCloud_Backend_Pipeline/build/libs/backend-0.0.1-SNAPSHOT.jar centos@210.109.60.60:/home/centos/backend
                     '''
 
-                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10003 ./deploy1.sh > /dev/null 2>&1 &'
+                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10003 ./deploy.sh > /dev/null 2>&1 &'
 
                     echo "Success"
                     slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS1-Backend-chatting Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
@@ -42,7 +42,7 @@ pipeline {
                         scp -r -P 10004  /var/jenkins_home/workspace/forCloud_Backend_Pipeline/build/libs/backend-0.0.1-SNAPSHOT.jar centos@210.109.60.60:/home/centos/backend
                     '''
 
-                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10004 ./deploy1.sh > /dev/null 2>&1 &'
+                    sh 'JENKINS_NODE_COOKIE=dontKillMe ssh -t centos@210.109.60.60 -p 10004 ./deploy.sh > /dev/null 2>&1 &'
 
                     echo "Success"
                     slackSend (channel: '#jenkins-alert', color: '#FFFF00', message: "WAS2-Backend-chatting Deploy Complete: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
